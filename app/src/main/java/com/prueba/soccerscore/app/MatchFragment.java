@@ -73,14 +73,7 @@ public class MatchFragment extends Fragment {
                 "Betis2",
                 "Recre2",
                 "Santander2",
-                "Jar kgv2",
-                "Barcelona3",
-                "Sevilla3",
-                "Betis3",
-                "Recre3",
-                "Santander3",
-                "Jar kgv3",
-                "fgwrbrb3"
+                "Jar kgv2"
         };
         List<String> local = new ArrayList<String>(Arrays.asList(data));
 
