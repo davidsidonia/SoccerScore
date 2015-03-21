@@ -1,10 +1,12 @@
 package com.prueba.soccerscore.app;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import org.json.JSONArray;
@@ -95,6 +97,21 @@ public class MatchFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listview_match);
         listView.setAdapter(matchs);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String oneMatch = matchs.getItem(position);
+
+
+                Intent intent = new Intent(getActivity(), ScoreActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, oneMatch);
+                startActivity(intent);
+
+
+            }
+        });
+
 
         return rootView;
     }
@@ -146,6 +163,7 @@ public class MatchFragment extends Fragment {
 
             for (int i = 0; i < matchArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
+                String id;
                 String local;
                 String result;
                 String visitor;
@@ -153,6 +171,7 @@ public class MatchFragment extends Fragment {
                 // Get the JSON object representing the day
                 JSONObject match = matchArray.getJSONObject(i);
 
+                id = match.getString(OWM_ID);
                 local = match.getString(OWM_LOCAL);
                 result = match.getString(OWM_RESULT);
                 visitor = match.getString(OWM_VISITOR);
@@ -181,12 +200,9 @@ public class MatchFragment extends Fragment {
 //                highAndLow = formatHighLows(high, low);
 //***************************************************************************************
 
-                resultStrs[i] = local + " / " + result + " / " + visitor;
+                resultStrs[i] = local + " / " + result + " / " + visitor + " / " + id;
             }
 
-            for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Match entry: " + s);
-            }
             return resultStrs;
 
         }
@@ -236,8 +252,6 @@ public class MatchFragment extends Fragment {
                     return null;
                 }
                 matchsJsonStr = buffer.toString();
-
-                Log.v(LOG_TAG, "Match string: " + matchsJsonStr);
 
             } catch (IOException e) {
                 Log.e("LOG_TAG", "Error ", e);
