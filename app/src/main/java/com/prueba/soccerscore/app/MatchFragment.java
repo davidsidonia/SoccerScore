@@ -20,8 +20,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -53,8 +51,7 @@ public class MatchFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            FetchMatch fetchMatch = new FetchMatch();
-            fetchMatch.execute();
+            updateMatch();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -65,32 +62,15 @@ public class MatchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Create some dummy data for the ListView. Here's a sample weekly forecast
-        String[] data = {
-                "Barcelona",
-                "Sevilla",
-                "Betis",
-                "Recre",
-                "Santander",
-                "Jar kgv",
-                "Barcelona2",
-                "Sevilla2",
-                "Betis2",
-                "Recre2",
-                "Santander2",
-                "Jar kgv2"
-        };
-        List<String> local = new ArrayList<String>(Arrays.asList(data));
 
-// Now that we have some dummy forecast data, create an ArrayAdapter.
-        // The ArrayAdapter will take data from a source (like our dummy forecast) and
+        // The ArrayAdapter will take data from a source and
         // use it to populate the ListView it's attached to.
         matchs =
                 new ArrayAdapter<String>(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_match, // The name of the layout ID.
                         R.id.list_item_local_team, // The ID of the textview to populate.
-                        local);
+                        new ArrayList<String>());
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -114,6 +94,18 @@ public class MatchFragment extends Fragment {
 
 
         return rootView;
+
+    }
+
+    private void updateMatch() {
+        FetchMatch fetchMatch = new FetchMatch();
+        fetchMatch.execute();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateMatch();
     }
 
 
