@@ -1,9 +1,11 @@
 package com.prueba.soccerscore.app.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 /**
@@ -19,6 +21,16 @@ public class MatchProvider extends ContentProvider {
     private static final int SCORE = 101;
 
 
+    private static final SQLiteQueryBuilder sMatchQueryBuilder = new SQLiteQueryBuilder();
+
+    private static final String sIdMatchSelection =
+            MatchContract.ScoreEntry.TABLE_NAME +
+                    "." + MatchContract.ScoreEntry.COLUMN_MATCH_KEY + " = ? ";
+
+
+
+
+
     static UriMatcher buildUriMatcher() {
 
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -32,6 +44,36 @@ public class MatchProvider extends ContentProvider {
     }
 
 
+    private Cursor getMatch(
+            Uri uri, String[] projection, String sortOrder) {
+
+        return sMatchQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                null,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+
+    private Cursor getScore(Uri uri, String[] projection, String sortOrder) {
+
+        long matchId = ContentUris.parseId(uri);
+        return sMatchQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sIdMatchSelection,
+                new String[]{Long.toString(matchId)},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+
+
+
     @Override
     public boolean onCreate() {
         mOpenHelper = new MatchDbHelper(getContext());
@@ -41,8 +83,24 @@ public class MatchProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
-        return null;
+        Cursor retCursor;
+
+        switch (sUriMatcher.match(uri)) {
+
+            case MATCH:
+                retCursor = getMatch(uri, projection, sortOrder);
+                break;
+            case SCORE:
+                retCursor = getScore(uri, projection, sortOrder);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
     }
+
 
     @Override
     public String getType(Uri uri) {
@@ -59,6 +117,7 @@ public class MatchProvider extends ContentProvider {
         }
 
     }
+
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
