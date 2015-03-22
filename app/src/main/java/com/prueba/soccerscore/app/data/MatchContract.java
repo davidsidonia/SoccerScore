@@ -1,5 +1,8 @@
 package com.prueba.soccerscore.app.data;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -7,24 +10,31 @@ import android.provider.BaseColumns;
  */
 public class MatchContract {
 
-    // To make it easy to query for the exact date, we normalize all dates that go into
-    // the database to the start of the the Julian day at UTC.
-//             public static long normalizeDate(long startDate) {
-//         // normalize the start date to the beginning of the (UTC) day
-//                 Time time = new Time();
-//         time.set(startDate);
-//         int julianDay = Time.getJulianDay(startDate, time.gmtoff);
-//         return time.setJulianDay(julianDay);
-//         }
 
-    /*
-Inner class that defines the table contents of the location table
-Students: This is where you will add the strings. (Similar to what has been
-done for WeatherEntry)
-*/
+    public static final String CONTENT_AUTHORITY = "com.prueba.soccerscore.app";
+    // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
+// the content provider.
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    public static final String PATH_MATCH = "match";
+    public static final String PATH_SCORE = "score";
+
+
+
     public static final class MatchEntry implements BaseColumns {
-        public static final String TABLE_NAME = "match";
 
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MATCH).build();
+
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MATCH;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MATCH;
+
+
+
+        public static final String TABLE_NAME = "match";
 
         public static final String COLUMN_MATCH_KEY = "match_id";
         // Date, stored as long in milliseconds since the epoch
@@ -55,6 +65,18 @@ done for WeatherEntry)
     /* Inner class that defines the table contents of the weather table */
     public static final class ScoreEntry implements BaseColumns {
 
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_SCORE).build();
+
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SCORE;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SCORE;
+
+
+
         public static final String TABLE_NAME = "score";
 
         // Column with the foreign key into the location table.
@@ -70,6 +92,11 @@ done for WeatherEntry)
 
 
         public static final String COLUMN_TEAM = "team";
+
+
+        public static Uri buildScoreUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
 
     }
 

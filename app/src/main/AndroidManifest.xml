@@ -27,6 +27,11 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.prueba.soccerscore.app.MainActivity"/>
         </activity>
+        <provider
+                android:authorities="com.prueba.soccerscore.app"
+                android:name=".data.MatchProvider"/>
+
+
     </application>
 
 </manifest>
