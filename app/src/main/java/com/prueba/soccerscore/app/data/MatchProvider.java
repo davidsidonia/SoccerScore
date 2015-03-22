@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
@@ -121,8 +122,85 @@ public class MatchProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+        Uri returnUri;
+        switch (sUriMatcher.match(uri)) {
+            case MATCH: {
+
+                db.execSQL("truncate " + MatchContract.MatchEntry.TABLE_NAME);
+                db.insert(MatchContract.MatchEntry.TABLE_NAME, null, values);
+                //TODO   me puede hacer falta lo mismo que abajo
+            }
+            case SCORE: {
+                db.execSQL("truncate " + MatchContract.ScoreEntry.TABLE_NAME);
+                long _id = db.insert(MatchContract.ScoreEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = MatchContract.ScoreEntry.buildScoreUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return returnUri;
+
     }
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int returnCount;
+        switch (match) {
+
+            case MATCH:
+                db.execSQL("truncate " + MatchContract.MatchEntry.TABLE_NAME);
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+
+                        long _id = db.insert(MatchContract.MatchEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+
+            case SCORE:
+                db.execSQL("truncate " + MatchContract.ScoreEntry.TABLE_NAME);
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+
+                        long _id = db.insert(MatchContract.ScoreEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            default:
+                return super.bulkInsert(uri, values);
+        }
+    }
+
+
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
