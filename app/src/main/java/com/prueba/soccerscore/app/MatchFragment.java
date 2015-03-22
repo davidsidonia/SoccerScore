@@ -131,12 +131,12 @@ public class MatchFragment extends Fragment {
             final String OWM_ROUND = "round";
             final String OWM_LOCAL = "local";
             final String OWM_VISITOR = "visitor";
-            final String OWM_SCHEDULE = "schedule";
             final String OWM_DATE = "date";
             final String OWM_HOUR = "hour";
             final String OWM_MINUTE = "minute";
             final String OWM_RESULT = "result";
             final String OWM_LIVE_MINUTE = "live_minute";
+
 
             JSONObject matchJson = new JSONObject(matchJsonStr);
             JSONArray matchArray = matchJson.getJSONArray(OWM_MATCH);
