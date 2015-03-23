@@ -40,6 +40,7 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
     private String[] getMatchDataFromJson(String matchJsonStr)
             throws JSONException {
 
+
         // These are the names of the JSON objects that need to be extracted.
         final String OWM_MATCH = "match";
         final String OWM_ID = "id";
@@ -129,6 +130,7 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
 
         try {
             // Construct the URL for the resultados-futbol query
+
 
             URL url = new URL("http://www.resultados-futbol.com/scripts/api/api.php?format=json&req=matchs&key=7e210fae6e101bc9a25b2b432d00e501&league=1");
 
