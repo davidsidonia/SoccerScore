@@ -51,11 +51,18 @@ public class MatchFragment extends Fragment {
 
         // Sort order: Ascending, by date.
 
-        String sortOrder = MatchContract.MatchEntry.COLUMN_MATCH_KEY + " ASC";
+        //*************** comentado esto para quitar orden
 
+        // String sortOrder = MatchContract.MatchEntry.COLUMN_MATCH_KEY + " ASC";
+
+
+//        Cursor cur = getActivity().getContentResolver().query(MatchContract.MatchEntry.CONTENT_URI,
+//                null, null, null, sortOrder);
+
+        //*****************************
 
         Cursor cur = getActivity().getContentResolver().query(MatchContract.MatchEntry.CONTENT_URI,
-                null, null, null, sortOrder);
+                null, null, null, null);
 
 
         matchs = new MatchAdapter(getActivity(), cur, 0);

@@ -45,7 +45,7 @@ public class MatchAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        TextView tv = (TextView) view;
+        TextView tv = (TextView) view.findViewById(R.id.list_item_local_team);
         tv.setText(convertCursorRowToUXFormat(cursor));
     }
 }

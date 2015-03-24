@@ -22,7 +22,14 @@ public class MatchProvider extends ContentProvider {
     private static final int SCORE = 101;
 
 
-    private static final SQLiteQueryBuilder sMatchQueryBuilder = new SQLiteQueryBuilder();
+    private static final SQLiteQueryBuilder sMatchQueryBuilder;
+
+    static {
+
+        sMatchQueryBuilder = new SQLiteQueryBuilder();
+        sMatchQueryBuilder.setTables(MatchContract.MatchEntry.TABLE_NAME);
+    }
+
 
     private static final String sIdMatchSelection =
             MatchContract.ScoreEntry.TABLE_NAME +
