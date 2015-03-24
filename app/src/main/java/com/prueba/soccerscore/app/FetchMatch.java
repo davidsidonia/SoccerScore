@@ -1,7 +1,10 @@
 package com.prueba.soccerscore.app;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import com.prueba.soccerscore.app.data.MatchContract.MatchEntry;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,30 +15,28 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Vector;
 
 /**
  * Created by David on 22/03/2015.
  */
 public class FetchMatch extends AsyncTask<Void, Void, String[]> {
 
+    private final Context mContext;
     private MatchFragment matchFragment;
     private ListenerMatch listenerMatch;
     private final String LOG_TAG = FetchMatch.class.getSimpleName();
 
-    public FetchMatch(MatchFragment matchFragment, ListenerMatch listenerMatch) {
+    public FetchMatch(Context context, MatchFragment matchFragment, ListenerMatch listenerMatch) {
 
+        mContext = context;
         this.matchFragment = matchFragment;
         this.listenerMatch = listenerMatch;
     }
 
 
-    /**
-     * + * Take the String representing the complete forecast in JSON Format and
-     * + * pull out the data we need to construct the Strings needed for the wireframes.
-     * + *
-     * + * Fortunately parsing is easy: constructor takes the JSON string and converts it
-     * + * into an Object hierarchy for us.
-     * +
+    /*    metodo que recoje el JSON y lo parsea obteniendo los datos que queremos, en este caso y de momento en un String
+          para poder mostrarlos en el LIstview
      */
     private String[] getMatchDataFromJson(String matchJsonStr)
             throws JSONException {
@@ -53,66 +54,82 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
         final String OWM_RESULT = "result";
         final String OWM_LIVE_MINUTE = "live_minute";
 
-
-        JSONObject matchJson = new JSONObject(matchJsonStr);
-        JSONArray matchArray = matchJson.getJSONArray(OWM_MATCH);
-
-        // OWM returns daily forecasts based upon the local time of the city that is being
-        // asked for, which means that we need to know the GMT offset to translate this data
-        // properly.
-
-        // Since this data is also sent in-order and the first day is always the
-        // current day, we're going to take advantage of that to get a nice
-        // normalized UTC date for all of our weather.
+        try {
+            JSONObject matchJson = new JSONObject(matchJsonStr);
+            JSONArray matchArray = matchJson.getJSONArray(OWM_MATCH);
 
 
-//**************************** en el tamaño del array 'resultStrs'  no se si va a funcionar
-        String[] resultStrs = new String[matchArray.length()];
+            String[] resultStrs = new String[matchArray.length()];
 
-        for (int i = 0; i < matchArray.length(); i++) {
-            // For now, using the format "Day, description, hi/low"
-            String id;
-            String local;
-            String result;
-            String visitor;
+            // Insert the new weather information into the database
+            Vector<ContentValues> cVVector = new Vector<ContentValues>(matchArray.length());
 
-            // Get the JSON object representing the day
-            JSONObject match = matchArray.getJSONObject(i);
+            for (int i = 0; i < matchArray.length(); i++) {
 
-            id = match.getString(OWM_ID);
-            local = match.getString(OWM_LOCAL);
-            result = match.getString(OWM_RESULT);
-            visitor = match.getString(OWM_VISITOR);
+                String id;
+                String round;
+                String local;
+                String visitor;
+                String date;
+                String hour;
+                String minute;
+                String result;
+                String live_minute;
 
 
-//**************  comentado por mi, porque es de sunshine y me puede servir de guia para SoccerScore
-//// The date/time is returned as a long. We need to convert that
-//// into something human-readable, since most people won't read "1400356800" as
-//// "this saturday".
-//                long dateTime;
-//// Cheating to convert this to UTC time, which is what we want anyhow
-//                dateTime = dayTime.setJulianDay(julianStartDay+i);
-//                day = getReadableDateString(dateTime);
-//
-//
-//                // description is in a child array called "weather", which is 1 element long.
-//                JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
-//                description = weatherObject.getString(OWM_DESCRIPTION);
-//
-//                // Temperatures are in a child object called "temp". Try not to name variables
-//                // "temp" when working with temperature. It confuses everybody.
-//                JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
-//                double high = temperatureObject.getDouble(OWM_MAX);
-//                double low = temperatureObject.getDouble(OWM_MIN);
-//
-//                highAndLow = formatHighLows(high, low);
-//***************************************************************************************
+                // Get the JSON object representing the match
+                JSONObject match = matchArray.getJSONObject(i);
 
-            resultStrs[i] = local + " / " + result + " / " + visitor + " / " + id;
+                id = match.getString(OWM_ID);
+                round = match.getString(OWM_ROUND);
+                local = match.getString(OWM_LOCAL);
+                visitor = match.getString(OWM_VISITOR);
+                date = match.getString(OWM_DATE);
+                hour = match.getString(OWM_HOUR);
+                minute = match.getString(OWM_MINUTE);
+                result = match.getString(OWM_RESULT);
+                live_minute = match.getString(OWM_LIVE_MINUTE);
+
+
+                ContentValues matchValues = new ContentValues();
+
+                matchValues.put(MatchEntry.COLUMN_MATCH_KEY, id);
+                matchValues.put(MatchEntry.COLUMN_ROUND, round);
+                matchValues.put(MatchEntry.COLUMN_LOCAL, local);
+                matchValues.put(MatchEntry.COLUMN_VISITOR, visitor);
+                matchValues.put(MatchEntry.COLUMN_DATE, date);
+                matchValues.put(MatchEntry.COLUMN_HOUR, hour);
+                matchValues.put(MatchEntry.COLUMN_MINUTE, minute);
+                matchValues.put(MatchEntry.COLUMN_RESULT, result);
+                matchValues.put(MatchEntry.COLUMN_LIVE_MINUTE, live_minute);
+
+
+                cVVector.add(matchValues);
+
+
+                resultStrs[i] = id + " - " + local;
+            }
+
+
+            // add to database
+            if (cVVector.size() > 0) {
+                ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                cVVector.toArray(cvArray);
+                //esta es la linea original, pero como aqui no tenemos mContext creo que va lo que he puesto
+                // mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
+
+                mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
+            }
+
+
+            return resultStrs;
+
+
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
         }
-
-        return resultStrs;
-
+        return null;
     }
 
 
@@ -134,7 +151,7 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
 
             URL url = new URL("http://www.resultados-futbol.com/scripts/api/api.php?format=json&req=matchs&key=7e210fae6e101bc9a25b2b432d00e501&league=1");
 
-            // Create the request to OpenWeatherMap, and open the connection
+            // Create the request to resultados-futbol, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -168,7 +185,6 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
             // to parse it.
             return null;
 
-
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -188,10 +204,7 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-
         // This will only happen if there was an error getting or parsing the forecast.
-
-
         return null;
     }
 
@@ -200,8 +213,6 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
     protected void onPostExecute(String[] result) {
         if (result != null) {
             listenerMatch.cuandoTengasLosDatos(result);
-
-            // New data is back from the server. Hooray!
         }
     }
 

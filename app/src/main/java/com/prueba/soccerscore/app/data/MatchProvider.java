@@ -129,12 +129,12 @@ public class MatchProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case MATCH: {
 
-                db.execSQL("truncate " + MatchContract.MatchEntry.TABLE_NAME);
+                db.execSQL("DELETE FROM " + MatchContract.MatchEntry.TABLE_NAME);
                 db.insert(MatchContract.MatchEntry.TABLE_NAME, null, values);
                 //TODO   me puede hacer falta lo mismo que abajo
             }
             case SCORE: {
-                db.execSQL("truncate " + MatchContract.ScoreEntry.TABLE_NAME);
+                db.execSQL("DELETE FROM " + MatchContract.ScoreEntry.TABLE_NAME);
                 long _id = db.insert(MatchContract.ScoreEntry.TABLE_NAME, null, values);
                 if (_id > 0)
                     returnUri = MatchContract.ScoreEntry.buildScoreUri(_id);
@@ -158,7 +158,7 @@ public class MatchProvider extends ContentProvider {
         switch (match) {
 
             case MATCH:
-                db.execSQL("truncate " + MatchContract.MatchEntry.TABLE_NAME);
+                db.execSQL("DELETE FROM " + MatchContract.MatchEntry.TABLE_NAME);
                 db.beginTransaction();
                 returnCount = 0;
                 try {
@@ -178,7 +178,7 @@ public class MatchProvider extends ContentProvider {
 
 
             case SCORE:
-                db.execSQL("truncate " + MatchContract.ScoreEntry.TABLE_NAME);
+                db.execSQL("DELETE FROM " + MatchContract.ScoreEntry.TABLE_NAME);
                 db.beginTransaction();
                 returnCount = 0;
                 try {

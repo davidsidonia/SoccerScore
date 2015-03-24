@@ -89,7 +89,7 @@ public class MatchFragment extends Fragment implements ListenerMatch {
     private void updateMatch() {
 
 
-        FetchMatch fetchMatch = new FetchMatch(this, this);
+        FetchMatch fetchMatch = new FetchMatch(getActivity(), this, this);
         //
         fetchMatch.execute();
     }
