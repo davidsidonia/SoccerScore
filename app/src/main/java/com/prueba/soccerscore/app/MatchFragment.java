@@ -21,7 +21,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     public MatchFragment() {
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
