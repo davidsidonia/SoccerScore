@@ -3,6 +3,9 @@ package com.prueba.soccerscore.app;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.*;
 import android.widget.ListView;
 import com.prueba.soccerscore.app.data.MatchContract;
@@ -10,8 +13,9 @@ import com.prueba.soccerscore.app.data.MatchContract;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MatchFragment extends Fragment {
+public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final int MATCH_LOADER = 0;
     private MatchAdapter matchs;
 
     public MatchFragment() {
@@ -49,23 +53,7 @@ public class MatchFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        // Sort order: Ascending, by date.
-
-        //*************** comentado esto para quitar orden
-
-        // String sortOrder = MatchContract.MatchEntry.COLUMN_MATCH_KEY + " ASC";
-
-
-//        Cursor cur = getActivity().getContentResolver().query(MatchContract.MatchEntry.CONTENT_URI,
-//                null, null, null, sortOrder);
-
-        //*****************************
-
-        Cursor cur = getActivity().getContentResolver().query(MatchContract.MatchEntry.CONTENT_URI,
-                null, null, null, null);
-
-
-        matchs = new MatchAdapter(getActivity(), cur, 0);
+        matchs = new MatchAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -77,9 +65,14 @@ public class MatchFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(MATCH_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+
     private void updateMatch() {
-
-
         FetchMatch fetchMatch = new FetchMatch(getActivity());
         fetchMatch.execute();
     }
@@ -91,4 +84,26 @@ public class MatchFragment extends Fragment {
     }
 
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+
+
+        return new CursorLoader(getActivity(),
+                MatchContract.MatchEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        matchs.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        matchs.swapCursor(null);
+    }
 }
