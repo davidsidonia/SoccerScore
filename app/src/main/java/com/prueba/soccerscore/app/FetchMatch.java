@@ -20,25 +20,22 @@ import java.util.Vector;
 /**
  * Created by David on 22/03/2015.
  */
-public class FetchMatch extends AsyncTask<Void, Void, String[]> {
+public class FetchMatch extends AsyncTask<Void, Void, Void> {
 
-    private final Context mContext;
-    private MatchFragment matchFragment;
-    private ListenerMatch listenerMatch;
     private final String LOG_TAG = FetchMatch.class.getSimpleName();
 
-    public FetchMatch(Context context, MatchFragment matchFragment, ListenerMatch listenerMatch) {
+    private final Context mContext;
 
+
+    public FetchMatch(Context context) {
         mContext = context;
-        this.matchFragment = matchFragment;
-        this.listenerMatch = listenerMatch;
     }
 
 
     /*    metodo que recoje el JSON y lo parsea obteniendo los datos que queremos, en este caso y de momento en un String
           para poder mostrarlos en el LIstview
      */
-    private String[] getMatchDataFromJson(String matchJsonStr)
+    private void getMatchDataFromJson(String matchJsonStr)
             throws JSONException {
 
 
@@ -58,8 +55,9 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
             JSONObject matchJson = new JSONObject(matchJsonStr);
             JSONArray matchArray = matchJson.getJSONArray(OWM_MATCH);
 
-
-            String[] resultStrs = new String[matchArray.length()];
+//************************
+            // String[] resultStrs = new String[matchArray.length()];
+//******************************************
 
             // Insert the new weather information into the database
             Vector<ContentValues> cVVector = new Vector<ContentValues>(matchArray.length());
@@ -106,36 +104,40 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
 
                 cVVector.add(matchValues);
 
-
-                resultStrs[i] = id + " - " + local;
+//*********************************
+                // resultStrs[i] = id + " - " + local;
+                //*********************************
             }
 
+            int inserted = 0;
 
             // add to database
             if (cVVector.size() > 0) {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
-                //esta es la linea original, pero como aqui no tenemos mContext creo que va lo que he puesto
-                // mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
-
-                mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
+                inserted = mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
             }
 
+            Log.d(LOG_TAG, "FetchMatch Complete. " + inserted + " Inserted");
 
-            return resultStrs;
-
+//********************************************************
+            //return resultStrs;
+//*********************************************************
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-        return null;
+
     }
 
 
     @Override
-    protected String[] doInBackground(Void... params) {
+    protected Void doInBackground(Void... params) {
 
+        if (params.length == 0) {
+            return null;
+        }
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -178,12 +180,14 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
                 return null;
             }
             matchsJsonStr = buffer.toString();
+            getMatchDataFromJson(matchsJsonStr);
 
         } catch (IOException e) {
             Log.e("LOG_TAG", "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
-            return null;
+
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
 
         } finally {
             if (urlConnection != null) {
@@ -198,22 +202,15 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
             }
         }
 
-        try {
-            return getMatchDataFromJson(matchsJsonStr);
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
-        }
-        // This will only happen if there was an error getting or parsing the forecast.
         return null;
     }
 
 
-    @Override
-    protected void onPostExecute(String[] result) {
-        if (result != null) {
-            listenerMatch.cuandoTengasLosDatos(result);
-        }
-    }
+//    @Override
+//    protected void onPostExecute(String[] result) {
+//        if (result != null) {
+//            listenerMatch.cuandoTengasLosDatos(result);
+//        }
+//    }
 
 }
