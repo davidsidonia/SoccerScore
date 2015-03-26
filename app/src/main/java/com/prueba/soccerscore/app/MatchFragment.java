@@ -1,22 +1,20 @@
 package com.prueba.soccerscore.app;
 
-import android.database.Cursor;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.view.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.prueba.soccerscore.app.data.MatchContract;
 
-/**
- * A placeholder fragment containing a simple view.
+import java.util.ArrayList;
+
+/*
+ * Created by David on 26/03/2015.
  */
-public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    private static final int MATCH_LOADER = 0;
-    private MatchAdapter matchs;
+public class MatchFragment extends Fragment implements ListenerMatch {
+    private ArrayAdapter<String> matchs;
 
     public MatchFragment() {
     }
@@ -24,7 +22,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
     }
 
@@ -35,9 +32,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             updateMatch();
@@ -46,33 +40,32 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
-        matchs = new MatchAdapter(getActivity(), null, 0);
-
+        matchs =
+                new ArrayAdapter<String>(
+                        getActivity(),
+                        R.layout.list_item_match,
+                        R.id.list_item_local_team,
+                        new ArrayList<String>());
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
         ListView listView = (ListView) rootView.findViewById(R.id.listview_match);
         listView.setAdapter(matchs);
-
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String oneMatch = matchs.getItem(position);
+                Intent intent = new Intent(getActivity(), ScoreActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, oneMatch);
+                startActivity(intent);
+            }
+        });
         return rootView;
-
     }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(MATCH_LOADER, null, this);
-        super.onActivityCreated(savedInstanceState);
-    }
-
 
     private void updateMatch() {
-        FetchMatch fetchMatch = new FetchMatch(getActivity());
+        FetchMatch fetchMatch = new FetchMatch(getActivity(), this, this);
         fetchMatch.execute();
     }
 
@@ -82,27 +75,11 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         updateMatch();
     }
 
-
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-
-
-        return new CursorLoader(getActivity(),
-                MatchContract.MatchEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null);
-
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        matchs.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        matchs.swapCursor(null);
+    public void cuandoTengasLosDatos(String[] result) {
+        matchs.clear();
+        for (String matchStr : result) {
+            matchs.add(matchStr);
+        }
     }
 }
