@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.prueba.soccerscore.app.data.MatchContract;
 
 /*
  * Created by David on 26/03/2015.
@@ -21,13 +20,10 @@ public class MatchAdapter extends CursorAdapter {
 
 
     private String convertCursorRowToUXFormat(Cursor cursor) {
-        int idx_local = cursor.getColumnIndex(MatchContract.MatchEntry.COLUMN_LOCAL);
-        int idx_visitor = cursor.getColumnIndex(MatchContract.MatchEntry.COLUMN_VISITOR);
-        int idx_result = cursor.getColumnIndex(MatchContract.MatchEntry.COLUMN_RESULT);
 
-        return cursor.getString(idx_local) +
-                " - " + cursor.getString(idx_visitor) +
-                " / " + cursor.getString(idx_result);
+        return cursor.getString(MatchFragment.COL_MATCH_LOCAL) +
+                " - " + cursor.getString(MatchFragment.COL_MATCH_VISITOR) +
+                " / " + cursor.getString(MatchFragment.COL_MATCH_RESULT);
 
     }
 

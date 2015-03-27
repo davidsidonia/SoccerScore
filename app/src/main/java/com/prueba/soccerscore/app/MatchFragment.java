@@ -17,6 +17,32 @@ import com.prueba.soccerscore.app.data.MatchContract;
 public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int MATCH_LOADER = 0;
+
+    private static final String[] MATCH_COLUMNS = {
+            MatchContract.MatchEntry.TABLE_NAME + "." + MatchContract.MatchEntry._ID,
+            MatchContract.MatchEntry.COLUMN_MATCH_KEY,
+            MatchContract.MatchEntry.COLUMN_ROUND,
+            MatchContract.MatchEntry.COLUMN_LOCAL,
+            MatchContract.MatchEntry.COLUMN_VISITOR,
+            MatchContract.MatchEntry.COLUMN_DATE,
+            MatchContract.MatchEntry.COLUMN_HOUR,
+            MatchContract.MatchEntry.COLUMN_MINUTE,
+            MatchContract.MatchEntry.COLUMN_RESULT,
+            MatchContract.MatchEntry.COLUMN_LIVE_MINUTE
+    };
+
+
+    static final int COL_MATCH_ID = 0;
+    static final int COL_MATCH_MATCH_KEY = 1;
+    static final int COL_MATCH_ROUND = 2;
+    static final int COL_MATCH_LOCAL = 3;
+    static final int COL_MATCH_VISITOR = 4;
+    static final int COL_MATCH_DATE = 5;
+    static final int COL_MATCH_HOUR = 6;
+    static final int COL_MATCH_MINUTE = 7;
+    static final int COL_MATCH_RESULT = 8;
+    static final int COL_MATCH_LIVE_MINUTE = 9;
+
     private MatchAdapter matchs;
 
     public MatchFragment() {
@@ -91,7 +117,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
         return new CursorLoader(getActivity(),
                 matchUri,
-                null,
+                MATCH_COLUMNS,
                 null,
                 null,
                 null);

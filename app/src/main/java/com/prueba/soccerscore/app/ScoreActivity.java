@@ -42,6 +42,9 @@ public class ScoreActivity extends ActionBarActivity {
      * A ScoreFragment fragment containing a simple view.
      */
     public static class ScoreFragment extends Fragment {
+
+        private String matchStr;
+
         public ScoreFragment() {
         }
 
@@ -51,7 +54,10 @@ public class ScoreActivity extends ActionBarActivity {
 
             Intent intent = getActivity().getIntent();
             if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                String matchStr = intent.getStringExtra(Intent.EXTRA_TEXT);
+                matchStr = intent.getStringExtra(Intent.EXTRA_TEXT);
+            }
+
+            if (null != matchStr) {
                 ((TextView) rootView.findViewById(R.id.textView_nombre_eq_local))
                         .setText(matchStr);
             }
