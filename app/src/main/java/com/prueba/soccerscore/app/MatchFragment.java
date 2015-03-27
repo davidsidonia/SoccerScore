@@ -4,6 +4,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.*;
 import android.widget.ListView;
 import com.prueba.soccerscore.app.data.MatchContract;
@@ -11,7 +14,9 @@ import com.prueba.soccerscore.app.data.MatchContract;
 /*
  * Created by David on 26/03/2015.
  */
-public class MatchFragment extends Fragment {
+public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int MATCH_LOADER = 0;
     private MatchAdapter matchs;
 
     public MatchFragment() {
@@ -41,17 +46,11 @@ public class MatchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
-        Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
-
-        Cursor cur = getActivity().getContentResolver().query(matchUri,
-                null, null, null, null);
-
-
-        matchs = new MatchAdapter(getActivity(), cur, 0);
+        matchs = new MatchAdapter(getActivity(), null, 0);
 
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
         ListView listView = (ListView) rootView.findViewById(R.id.listview_match);
         listView.setAdapter(matchs);
 
@@ -67,6 +66,13 @@ public class MatchFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(MATCH_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+
     private void updateMatch() {
         FetchMatch fetchMatch = new FetchMatch(getActivity());
         fetchMatch.execute();
@@ -77,5 +83,29 @@ public class MatchFragment extends Fragment {
         super.onStart();
         updateMatch();
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+
+        Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
+
+        return new CursorLoader(getActivity(),
+                matchUri,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        matchs.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        matchs.swapCursor(null);
+    }
+
 
 }
