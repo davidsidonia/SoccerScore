@@ -1,20 +1,18 @@
 package com.prueba.soccerscore.app;
 
-import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.util.ArrayList;
+import com.prueba.soccerscore.app.data.MatchContract;
 
 /*
  * Created by David on 26/03/2015.
  */
 public class MatchFragment extends Fragment implements ListenerMatch {
-    private ArrayAdapter<String> matchs;
+    private MatchAdapter matchs;
 
     public MatchFragment() {
     }
@@ -43,24 +41,29 @@ public class MatchFragment extends Fragment implements ListenerMatch {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        matchs =
-                new ArrayAdapter<String>(
-                        getActivity(),
-                        R.layout.list_item_match,
-                        R.id.list_item_local_team,
-                        new ArrayList<String>());
+
+        Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
+
+        Cursor cur = getActivity().getContentResolver().query(matchUri,
+                null, null, null, null);
+
+
+        matchs = new MatchAdapter(getActivity(), cur, 0);
+
+
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ListView listView = (ListView) rootView.findViewById(R.id.listview_match);
         listView.setAdapter(matchs);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String oneMatch = matchs.getItem(position);
-                Intent intent = new Intent(getActivity(), ScoreActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, oneMatch);
-                startActivity(intent);
-            }
-        });
+
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                String oneMatch = matchs.getItem(position);
+//                Intent intent = new Intent(getActivity(), ScoreActivity.class)
+//                        .putExtra(Intent.EXTRA_TEXT, oneMatch);
+//                startActivity(intent);
+//            }
+//        });
         return rootView;
     }
 
@@ -77,9 +80,9 @@ public class MatchFragment extends Fragment implements ListenerMatch {
 
     @Override
     public void cuandoTengasLosDatos(String[] result) {
-        matchs.clear();
-        for (String matchStr : result) {
-            matchs.add(matchStr);
-        }
+//        matchs.clear();
+//        for (String matchStr : result) {
+//            matchs.add(matchStr);
+//        }
     }
 }

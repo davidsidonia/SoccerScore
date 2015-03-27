@@ -20,7 +20,7 @@ import java.util.Vector;
 /*
  * Created by David on 26/03/2015.
  */
-public class FetchMatch extends AsyncTask<Void, Void, String[]> {
+public class FetchMatch extends AsyncTask<Void, Void, Void> {
     private final Context mContext;
     private MatchFragment matchFragment;
     private ListenerMatch listenerMatch;
@@ -33,7 +33,7 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
     }
 
 
-    private String[] getMatchDataFromJson(String matchJsonStr) throws JSONException {
+    private void getMatchDataFromJson(String matchJsonStr) throws JSONException {
 
         final String OWM_MATCH = "match";
         final String OWM_ID = "id";
@@ -50,7 +50,7 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
             JSONObject matchJson = new JSONObject(matchJsonStr);
             JSONArray matchArray = matchJson.getJSONArray(OWM_MATCH);
 
-            String[] resultStrs = new String[matchArray.length()];
+            //String[] resultStrs = new String[matchArray.length()];
 
             Vector<ContentValues> cVVector = new Vector<ContentValues>(matchArray.length());
 
@@ -90,24 +90,27 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
                 matchValues.put(MatchEntry.COLUMN_LIVE_MINUTE, live_minute);
 
                 cVVector.add(matchValues);
-                resultStrs[i] = id + " - " + local;
+                // resultStrs[i] = id + " - " + local;
             }
 
+            int inserted = 0;
             if (cVVector.size() > 0) {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
-                mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
+                inserted = mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
             }
-            return resultStrs;
+            //return resultStrs;
+            Log.d(LOG_TAG, "FetchMatch Complete. " + inserted + " Inserted");
+
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-        return null;
+
     }
 
     @Override
-    protected String[] doInBackground(Void... params) {
+    protected Void doInBackground(Void... params) {
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -128,6 +131,7 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
                 return null;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
+
             String line;
             while ((line = reader.readLine()) != null) {
                 buffer.append(line + "\n");
@@ -136,10 +140,14 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
                 return null;
             }
             matchsJsonStr = buffer.toString();
+            getMatchDataFromJson(matchsJsonStr);
 
         } catch (IOException e) {
             Log.e("LOG_TAG", "Error ", e);
-            return null;
+
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
 
         } finally {
             if (urlConnection != null) {
@@ -154,21 +162,7 @@ public class FetchMatch extends AsyncTask<Void, Void, String[]> {
             }
         }
 
-        try {
-            return getMatchDataFromJson(matchsJsonStr);
-
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
-        }
-
         return null;
     }
 
-    @Override
-    protected void onPostExecute(String[] result) {
-        if (result != null) {
-            listenerMatch.cuandoTengasLosDatos(result);
-        }
-    }
 }
