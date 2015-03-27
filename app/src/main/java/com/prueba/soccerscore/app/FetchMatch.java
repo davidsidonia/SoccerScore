@@ -22,14 +22,11 @@ import java.util.Vector;
  */
 public class FetchMatch extends AsyncTask<Void, Void, Void> {
     private final Context mContext;
-    private MatchFragment matchFragment;
-    private ListenerMatch listenerMatch;
+
     private final String LOG_TAG = FetchMatch.class.getSimpleName();
 
-    public FetchMatch(Context context, MatchFragment matchFragment, ListenerMatch listenerMatch) {
+    public FetchMatch(Context context) {
         mContext = context;
-        this.matchFragment = matchFragment;
-        this.listenerMatch = listenerMatch;
     }
 
 
@@ -49,8 +46,6 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
         try {
             JSONObject matchJson = new JSONObject(matchJsonStr);
             JSONArray matchArray = matchJson.getJSONArray(OWM_MATCH);
-
-            //String[] resultStrs = new String[matchArray.length()];
 
             Vector<ContentValues> cVVector = new Vector<ContentValues>(matchArray.length());
 
@@ -90,7 +85,6 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
                 matchValues.put(MatchEntry.COLUMN_LIVE_MINUTE, live_minute);
 
                 cVVector.add(matchValues);
-                // resultStrs[i] = id + " - " + local;
             }
 
             int inserted = 0;
@@ -99,7 +93,6 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
                 cVVector.toArray(cvArray);
                 inserted = mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
             }
-            //return resultStrs;
             Log.d(LOG_TAG, "FetchMatch Complete. " + inserted + " Inserted");
 
         } catch (JSONException e) {

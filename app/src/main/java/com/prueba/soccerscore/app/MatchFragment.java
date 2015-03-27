@@ -11,7 +11,7 @@ import com.prueba.soccerscore.app.data.MatchContract;
 /*
  * Created by David on 26/03/2015.
  */
-public class MatchFragment extends Fragment implements ListenerMatch {
+public class MatchFragment extends Fragment {
     private MatchAdapter matchs;
 
     public MatchFragment() {
@@ -68,7 +68,7 @@ public class MatchFragment extends Fragment implements ListenerMatch {
     }
 
     private void updateMatch() {
-        FetchMatch fetchMatch = new FetchMatch(getActivity(), this, this);
+        FetchMatch fetchMatch = new FetchMatch(getActivity());
         fetchMatch.execute();
     }
 
@@ -78,11 +78,4 @@ public class MatchFragment extends Fragment implements ListenerMatch {
         updateMatch();
     }
 
-    @Override
-    public void cuandoTengasLosDatos(String[] result) {
-//        matchs.clear();
-//        for (String matchStr : result) {
-//            matchs.add(matchStr);
-//        }
-    }
 }

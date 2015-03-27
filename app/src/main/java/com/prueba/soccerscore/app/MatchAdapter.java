@@ -44,10 +44,4 @@ public class MatchAdapter extends CursorAdapter {
         tv.setText(convertCursorRowToUXFormat(cursor));
     }
 
-
-
-
-
-
-
 }
