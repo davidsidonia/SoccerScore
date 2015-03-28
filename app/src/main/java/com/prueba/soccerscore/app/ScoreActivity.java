@@ -111,7 +111,6 @@ public class ScoreActivity extends ActionBarActivity {
                 return;
             }
 
-
             String local = data.getString(COL_MATCH_LOCAL);
             String visitor = data.getString(COL_MATCH_VISITOR);
             String result = data.getString(COL_MATCH_RESULT);
