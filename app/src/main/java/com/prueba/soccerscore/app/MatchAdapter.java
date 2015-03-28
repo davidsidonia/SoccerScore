@@ -53,23 +53,16 @@ public class MatchAdapter extends CursorAdapter {
 
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-
-        viewHolder.iconViewLocal.setImageResource(R.drawable.ic_launcher);
-
-
         String local = cursor.getString(MatchFragment.COL_MATCH_LOCAL);
-        viewHolder.textViewLocal.setText(local);
-
-
         String result = cursor.getString(MatchFragment.COL_MATCH_RESULT);
-        viewHolder.textViewResult.setText(result);
-
-
         String visitor = cursor.getString(MatchFragment.COL_MATCH_VISITOR);
+
+
+        viewHolder.iconViewLocal.setImageResource(Utility.getEscudoParaVistaMatch(local));
+        viewHolder.textViewLocal.setText(local);
+        viewHolder.textViewResult.setText(result);
         viewHolder.textViewVisitor.setText(visitor);
-
-
-        viewHolder.iconViewVisitor.setImageResource(R.drawable.ic_launcher);
+        viewHolder.iconViewVisitor.setImageResource(Utility.getEscudoParaVistaMatch(visitor));
 
 
     }

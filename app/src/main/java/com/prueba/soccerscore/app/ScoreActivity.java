@@ -9,6 +9,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.view.*;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.prueba.soccerscore.app.data.MatchContract;
 
@@ -115,6 +116,13 @@ public class ScoreActivity extends ActionBarActivity {
             String visitor = data.getString(COL_MATCH_VISITOR);
             String result = data.getString(COL_MATCH_RESULT);
             String live_minute = data.getString(COL_MATCH_LIVE_MINUTE);
+
+
+            ImageView iconViewEscudoLocal = (ImageView) getView().findViewById(R.id.list_item_escudo_local_score);
+            iconViewEscudoLocal.setImageResource(Utility.getEscudoParaVistaScore(local));
+
+            ImageView iconViewEscudoVisitor = (ImageView) getView().findViewById(R.id.list_item_escudo_visitor_score);
+            iconViewEscudoVisitor.setImageResource(Utility.getEscudoParaVistaScore(visitor));
 
 
             TextView localTextView = (TextView) getView().findViewById(R.id.textView_nombre_eq_local);
