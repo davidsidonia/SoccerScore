@@ -1,5 +1,6 @@
 package com.prueba.soccerscore.app;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.*;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import com.prueba.soccerscore.app.data.MatchContract;
 
@@ -15,7 +18,7 @@ import com.prueba.soccerscore.app.data.MatchContract;
  * Created by David on 26/03/2015.
  */
 public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
+    private static final String LOG_TAG = MatchFragment.class.getSimpleName();
     private static final int MATCH_LOADER = 0;
 
     private static final String[] MATCH_COLUMNS = {
@@ -80,15 +83,24 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         ListView listView = (ListView) rootView.findViewById(R.id.listview_match);
         listView.setAdapter(matchs);
 
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                String oneMatch = matchs.getItem(position);
-//                Intent intent = new Intent(getActivity(), ScoreActivity.class)
-//                        .putExtra(Intent.EXTRA_TEXT, oneMatch);
-//                startActivity(intent);
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+//*********************** Añadido por mi para comprobar que coje bien la posicion en el listview, y lo coje bien (quitar luego)
+                String posit = cursor.getString(COL_MATCH_LOCAL);
+                Log.v(LOG_TAG, posit);
+//******************************************************************************************************************************
+
+                if (cursor != null) {
+                    Intent intent = new Intent(getActivity(), ScoreActivity.class)
+                            .setData(MatchContract.MatchEntry.CONTENT_URI);
+                    startActivity(intent);
+                }
+            }
+        });
+
         return rootView;
     }
 
