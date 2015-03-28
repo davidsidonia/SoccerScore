@@ -23,7 +23,7 @@ public class ScoreActivity extends ActionBarActivity {
         setContentView(R.layout.activity_score);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ScoreFragment())
+                    .add(R.id.container, new ScoreFragmentPru())
                     .commit();
         }
     }
@@ -47,9 +47,9 @@ public class ScoreActivity extends ActionBarActivity {
      * A ScoreFragment fragment containing a simple view.
      */
 
-    public static class ScoreFragment extends Fragment implements LoaderCallbacks<Cursor> {
+    public static class ScoreFragmentPru extends Fragment implements LoaderCallbacks<Cursor> {
 
-        private static final String LOG_TAG = ScoreFragment.class.getSimpleName();
+        private static final String LOG_TAG = ScoreFragmentPru.class.getSimpleName();
 
         private String scoreStr;
 
@@ -73,7 +73,7 @@ public class ScoreActivity extends ActionBarActivity {
         static final int COL_MATCH_LIVE_MINUTE = 5;
 
 
-        public ScoreFragment() {
+        public ScoreFragmentPru() {
         }
 
         @Override

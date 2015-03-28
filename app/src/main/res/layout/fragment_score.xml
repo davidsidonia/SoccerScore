@@ -20,9 +20,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <!--*********************************************-->
-            <!--poner aqui los imageView para los escudos-->
-            <!--*********************************************-->
+            <ImageView
+                    android:id="@+id/list_item_escudo_local_score"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_launcher"/>
+
+            <ImageView
+                    android:id="@+id/list_item_escudo_visitor_score"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_launcher"/>
 
         </LinearLayout>
 

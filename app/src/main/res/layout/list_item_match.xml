@@ -3,6 +3,12 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <ImageView
+            android:id="@+id/list_item_escudo_local_match"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
 
     <TextView
             android:id="@+id/list_item_local_team"
@@ -13,7 +19,6 @@
             android:gravity="left"
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceSmall"
-            android:text="barcelona"
             android:padding="16dp"/>
 
     <TextView
@@ -24,7 +29,6 @@
             android:gravity="center"
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceLarge"
-            android:text="5-5"
             android:padding="16dp"/>
 
     <TextView
@@ -36,6 +40,10 @@
             android:gravity="right"
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceSmall"
-            android:text="madrid"
             android:padding="16dp"/>
+    <ImageView
+            android:id="@+id/list_item_escudo_visitor_match"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 </LinearLayout>
