@@ -114,7 +114,7 @@ public class MatchAdapter extends CursorAdapter {
         } else if (live_minute.equals("")) {
 
             if (result.equals("x-x")) {
-                live_minute = "";
+                live_minute = null;
             } else {
                 live_minute = "FIN";
             }
