@@ -44,6 +44,14 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int COL_MATCH_LIVE_MINUTE = 5;
 
 
+    ImageView iconViewEscudoLocal;
+    ImageView iconViewEscudoVisitor;
+    TextView localTextView;
+    TextView visitorTextView;
+    TextView resultTextView;
+    TextView live_minuteTextView;
+
+
     public ScoreFragment() {
     }
 
@@ -104,23 +112,23 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
         }
 
 
-        ImageView iconViewEscudoLocal = (ImageView) getView().findViewById(R.id.list_item_escudo_local_score);
+        iconViewEscudoLocal = (ImageView) getView().findViewById(R.id.list_item_escudo_local_score);
         iconViewEscudoLocal.setImageResource(Utility.getEscudoParaVistaScore(local));
 
-        ImageView iconViewEscudoVisitor = (ImageView) getView().findViewById(R.id.list_item_escudo_visitor_score);
+        iconViewEscudoVisitor = (ImageView) getView().findViewById(R.id.list_item_escudo_visitor_score);
         iconViewEscudoVisitor.setImageResource(Utility.getEscudoParaVistaScore(visitor));
 
 
-        TextView localTextView = (TextView) getView().findViewById(R.id.textView_nombre_eq_local);
+        localTextView = (TextView) getView().findViewById(R.id.textView_nombre_eq_local);
         localTextView.setText(local);
 
-        TextView visitorTextView = (TextView) getView().findViewById(R.id.textView_nombre_eq_visitante);
+        visitorTextView = (TextView) getView().findViewById(R.id.textView_nombre_eq_visitante);
         visitorTextView.setText(visitor);
 
-        TextView resultTextView = (TextView) getView().findViewById(R.id.textView_resultado);
+        resultTextView = (TextView) getView().findViewById(R.id.textView_resultado);
         resultTextView.setText(result);
 
-        TextView live_minuteTextView = (TextView) getView().findViewById(R.id.textView_estado_partido);
+        live_minuteTextView = (TextView) getView().findViewById(R.id.textView_estado_partido);
         live_minuteTextView.setText(live_minute);
 
     }

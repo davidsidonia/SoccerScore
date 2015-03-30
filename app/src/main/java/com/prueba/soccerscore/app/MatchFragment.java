@@ -88,10 +88,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-//*********************** Añadido por mi para comprobar que coje bien la posicion en el listview, y lo coje bien (quitar luego)
-                String posit = cursor.getString(COL_MATCH_LOCAL);
-                Log.v(LOG_TAG, posit);
-//******************************************************************************************************************************
 
                 if (cursor != null) {
                     Intent intent = new Intent(getActivity(), ScoreActivity.class)
