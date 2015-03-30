@@ -21,15 +21,64 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:padding="16dp"/>
 
-    <TextView
-            android:id="@+id/list_item_score"
+
+    <!--TODO   1 INICIO *********************************************************************-->
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:fontFamily="sans-serif-condensed"
-            android:textAppearance="?android:textAppearanceLarge"
-            android:padding="16dp"/>
+            android:layout_height="wrap_content">
+        <!--TODO   1 FIN *********************************************************************-->
+
+
+        <TextView
+                android:id="@+id/list_item_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:padding="16dp"/>
+
+
+        <!--TODO   2 INICIO *********************************************************************-->
+        <TextView
+                android:id="@+id/list_item_fecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceSmall"/>
+        <TextView
+                android:id="@+id/list_item_hora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceSmall"/>
+        <TextView
+                android:id="@+id/list_item_live"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceSmall"/>
+        <TextView
+                android:id="@+id/list_item_resultado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceSmall"/>
+
+
+    </LinearLayout>
+    <!--TODO   2  FIN *********************************************************************-->
+
 
     <TextView
             android:id="@+id/list_item_visitor_team"

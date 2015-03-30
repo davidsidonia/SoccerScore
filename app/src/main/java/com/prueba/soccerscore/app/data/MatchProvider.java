@@ -17,7 +17,8 @@ public class MatchProvider extends ContentProvider {
 
     private MatchDbHelper mOpenHelper;
     private static final int MATCH = 100;
-    private static final int SCORE = 101;
+    private static final int MATCH_WITH_MATH_KEY = 101;
+    private static final int SCORE = 102;
 
     private static final SQLiteQueryBuilder sMatchQueryBuilder;
 
@@ -25,6 +26,11 @@ public class MatchProvider extends ContentProvider {
         sMatchQueryBuilder = new SQLiteQueryBuilder();
         sMatchQueryBuilder.setTables(MatchContract.MatchEntry.TABLE_NAME);
     }
+
+    private static final String sMatchKeySelection =
+            MatchContract.MatchEntry.TABLE_NAME +
+                    "." + MatchContract.MatchEntry.COLUMN_MATCH_KEY + " = ? ";
+
 
     private static final String sIdMatchSelection =
             MatchContract.ScoreEntry.TABLE_NAME +
@@ -34,12 +40,12 @@ public class MatchProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MatchContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, MatchContract.PATH_MATCH, MATCH);
+        matcher.addURI(authority, MatchContract.PATH_MATCH + "/*", MATCH_WITH_MATH_KEY);
         matcher.addURI(authority, MatchContract.PATH_SCORE + "/# ", SCORE);
         return matcher;
     }
 
-    private Cursor getMatch(
-            Uri uri, String[] projection, String sortOrder) {
+    private Cursor getMatch(Uri uri, String[] projection, String sortOrder) {
         return sMatchQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 null,
@@ -49,6 +55,19 @@ public class MatchProvider extends ContentProvider {
                 sortOrder
         );
     }
+
+    private Cursor getMatchWithMatchID(Uri uri, String[] projection, String sortOrder) {
+        String matchId = MatchContract.MatchEntry.getMatch_idFromUri(uri);
+        return sMatchQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sMatchKeySelection,
+                new String[]{matchId},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
 
     private Cursor getScore(Uri uri, String[] projection, String sortOrder) {
         long matchId = ContentUris.parseId(uri);
@@ -75,6 +94,9 @@ public class MatchProvider extends ContentProvider {
             case MATCH:
                 retCursor = getMatch(uri, projection, sortOrder);
                 break;
+            case MATCH_WITH_MATH_KEY:
+                retCursor = getMatchWithMatchID(uri, projection, sortOrder);
+                break;
             case SCORE:
                 retCursor = getScore(uri, projection, sortOrder);
                 break;
@@ -90,6 +112,8 @@ public class MatchProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case MATCH:
                 return MatchContract.MatchEntry.CONTENT_TYPE;
+            case MATCH_WITH_MATH_KEY:
+                return MatchContract.MatchEntry.CONTENT_ITEM_TYPE;
             case SCORE:
                 return MatchContract.ScoreEntry.CONTENT_TYPE;
             default:

@@ -15,14 +15,14 @@
             android:layout_height="match_parent">
 
         <TextView
-                android:id="@+id/textView_publi"
+                android:id="@+id/textView_jornada"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:fontFamily="sans-serif-condensed"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:text="DATOS CEDIDOS POR ..."
+                android:text="JORNADA "
                 android:padding="16dp"/>
 
         <ListView

@@ -35,6 +35,15 @@ public class MatchContract {
         public static final String COLUMN_MINUTE = "minute";
         public static final String COLUMN_RESULT = "result";
         public static final String COLUMN_LIVE_MINUTE = "live_minute";
+
+
+        public static Uri buildMatchWithMatchKey(String match_id) {
+            return CONTENT_URI.buildUpon().appendPath(match_id).build();
+        }
+
+        public static String getMatch_idFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
     }
 
 

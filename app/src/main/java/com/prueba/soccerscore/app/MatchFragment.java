@@ -95,8 +95,9 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
                 if (cursor != null) {
                     Intent intent = new Intent(getActivity(), ScoreActivity.class)
-                            .setData(MatchContract.MatchEntry.CONTENT_URI);
+                            .setData(MatchContract.MatchEntry.buildMatchWithMatchKey(cursor.getString(COL_MATCH_MATCH_KEY)));
                     startActivity(intent);
+                    Log.v(LOG_TAG, cursor.getString(COL_MATCH_MATCH_KEY));
                 }
             }
         });
