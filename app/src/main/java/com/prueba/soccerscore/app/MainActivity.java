@@ -10,14 +10,23 @@ import android.view.MenuItem;
  */
 public class MainActivity extends ActionBarActivity {
 
+    private boolean mTwoPane;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MatchFragment())
-                    .commit();
+
+        if (findViewById(R.id.score_container) != null) {
+            mTwoPane = true;
+
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.score_container, new ScoreFragment())
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
         }
     }
 

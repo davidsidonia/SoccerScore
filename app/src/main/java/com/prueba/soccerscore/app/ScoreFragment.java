@@ -58,7 +58,16 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_score, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_score, container, false);
+
+        iconViewEscudoLocal = (ImageView) rootView.findViewById(R.id.list_item_escudo_local_score);
+        iconViewEscudoVisitor = (ImageView) rootView.findViewById(R.id.list_item_escudo_visitor_score);
+        localTextView = (TextView) rootView.findViewById(R.id.textView_nombre_eq_local);
+        visitorTextView = (TextView) rootView.findViewById(R.id.textView_nombre_eq_visitante);
+        resultTextView = (TextView) rootView.findViewById(R.id.textView_resultado);
+        live_minuteTextView = (TextView) rootView.findViewById(R.id.textView_estado_partido);
+
+        return rootView;
     }
 
     @Override
@@ -70,7 +79,7 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Intent intent = getActivity().getIntent();
-        if (intent == null) {
+        if (intent == null || intent.getData() == null) {
             return null;
         }
 
@@ -86,51 +95,37 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (!data.moveToFirst()) {
-            return;
-        }
+        if (data != null && data.moveToFirst()) {
 
-        String local = data.getString(COL_MATCH_LOCAL);
-        String visitor = data.getString(COL_MATCH_VISITOR);
-        String result = data.getString(COL_MATCH_RESULT);
-        String live_minute = data.getString(COL_MATCH_LIVE_MINUTE);
 
-        if (live_minute.equals("DES") || live_minute.equals("des") || live_minute.equals("Des")) {
-            live_minute = "DESCANSO";
-        } else if (live_minute.equals("")) {
+            String local = data.getString(COL_MATCH_LOCAL);
+            String visitor = data.getString(COL_MATCH_VISITOR);
+            String result = data.getString(COL_MATCH_RESULT);
+            String live_minute = data.getString(COL_MATCH_LIVE_MINUTE);
 
-            if (result.equals("x-x")) {
-                live_minute = null;
-            } else {
-                live_minute = "FIN";
+            if (live_minute.equals("DES") || live_minute.equals("des") || live_minute.equals("Des")) {
+                live_minute = "DESCANSO";
+            } else if (live_minute.equals("")) {
+
+                if (result.equals("x-x")) {
+                    live_minute = null;
+                } else {
+                    live_minute = "FIN";
+                }
+
             }
 
+            if (result.equals("x-x")) {
+                result = " - ";
+            }
+
+            iconViewEscudoLocal.setImageResource(Utility.getEscudoParaVistaScore(local));
+            iconViewEscudoVisitor.setImageResource(Utility.getEscudoParaVistaScore(visitor));
+            localTextView.setText(local);
+            visitorTextView.setText(visitor);
+            resultTextView.setText(result);
+            live_minuteTextView.setText(live_minute);
         }
-
-        if (result.equals("x-x")) {
-            result = " - ";
-        }
-
-
-        iconViewEscudoLocal = (ImageView) getView().findViewById(R.id.list_item_escudo_local_score);
-        iconViewEscudoLocal.setImageResource(Utility.getEscudoParaVistaScore(local));
-
-        iconViewEscudoVisitor = (ImageView) getView().findViewById(R.id.list_item_escudo_visitor_score);
-        iconViewEscudoVisitor.setImageResource(Utility.getEscudoParaVistaScore(visitor));
-
-
-        localTextView = (TextView) getView().findViewById(R.id.textView_nombre_eq_local);
-        localTextView.setText(local);
-
-        visitorTextView = (TextView) getView().findViewById(R.id.textView_nombre_eq_visitante);
-        visitorTextView.setText(visitor);
-
-        resultTextView = (TextView) getView().findViewById(R.id.textView_resultado);
-        resultTextView.setText(result);
-
-        live_minuteTextView = (TextView) getView().findViewById(R.id.textView_estado_partido);
-        live_minuteTextView.setText(live_minute);
-
     }
 
 

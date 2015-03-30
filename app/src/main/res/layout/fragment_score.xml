@@ -78,7 +78,6 @@
                 android:textStyle="bold"
                 android:textSize="36sp"
                 android:paddingBottom="4dp"/>
-        <!--android:textAppearance="?android:textAppearanceLarge"-->
 
         <TextView
                 android:id="@+id/textView_estado_partido"

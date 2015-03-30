@@ -16,7 +16,7 @@ public class ScoreActivity extends ActionBarActivity {
         setContentView(R.layout.activity_score);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ScoreFragment())
+                    .add(R.id.score_container, new ScoreFragment())
                     .commit();
         }
     }
