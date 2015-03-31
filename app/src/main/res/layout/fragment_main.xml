@@ -26,6 +26,7 @@
                 android:padding="16dp"/>
 
         <ListView
+                style="@style/MatchListStyle"
                 android:id="@+id/listview_match"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
