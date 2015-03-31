@@ -1,7 +1,7 @@
 package com.prueba.soccerscore.app;
 
-import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -21,8 +21,10 @@ import com.prueba.soccerscore.app.data.MatchContract;
 public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = ScoreFragment.class.getSimpleName();
-
     private String scoreStr;
+
+    static final String DETAIL_URI = "URI";
+    private Uri mUri;
 
     private static final int SCORE_LOADER = 0;
 
@@ -58,6 +60,11 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mUri = arguments.getParcelable(ScoreFragment.DETAIL_URI);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_score, container, false);
 
         iconViewEscudoLocal = (ImageView) rootView.findViewById(R.id.list_item_escudo_local_score);
@@ -78,25 +85,24 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Intent intent = getActivity().getIntent();
-        if (intent == null || intent.getData() == null) {
-            return null;
-        }
 
-        return new CursorLoader(
-                getActivity(),
-                intent.getData(),
-                MATCH_COLUMNS,
-                null,
-                null,
-                null
-        );
+        if (null != mUri) {
+
+            return new CursorLoader(
+                    getActivity(),
+                    mUri,
+                    MATCH_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
+        }
+        return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
-
 
             String local = data.getString(COL_MATCH_LOCAL);
             String visitor = data.getString(COL_MATCH_VISITOR);

@@ -1,6 +1,5 @@
 package com.prueba.soccerscore.app;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -48,6 +46,11 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private MatchAdapter matchs;
 
+    public interface Callback {
+        public void onItemSelected(Uri matchUri);
+    }
+
+
     public MatchFragment() {
     }
 
@@ -59,6 +62,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
         inflater.inflate(R.menu.matchfragment, menu);
     }
 
@@ -77,7 +81,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
         matchs = new MatchAdapter(getActivity(), null, 0);
 
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_match);
@@ -90,10 +93,9 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
 
                 if (cursor != null) {
-                    Intent intent = new Intent(getActivity(), ScoreActivity.class)
-                            .setData(MatchContract.MatchEntry.buildMatchWithMatchKey(cursor.getString(COL_MATCH_MATCH_KEY)));
-                    startActivity(intent);
-                    Log.v(LOG_TAG, cursor.getString(COL_MATCH_MATCH_KEY));
+
+                    ((Callback) getActivity())
+                            .onItemSelected(MatchContract.MatchEntry.buildMatchWithMatchKey(cursor.getString(COL_MATCH_MATCH_KEY)));
                 }
             }
         });

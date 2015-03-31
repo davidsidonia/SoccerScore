@@ -14,9 +14,17 @@ public class ScoreActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score);
+
         if (savedInstanceState == null) {
+
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(ScoreFragment.DETAIL_URI, getIntent().getData());
+
+            ScoreFragment fragment = new ScoreFragment();
+            fragment.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.score_container, new ScoreFragment())
+                    .add(R.id.score_container, fragment)
                     .commit();
         }
     }
