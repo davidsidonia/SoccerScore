@@ -42,7 +42,7 @@ public class MainActivity extends ActionBarActivity implements MatchFragment.Cal
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
             return true;
         }
         return super.onOptionsItemSelected(item);
