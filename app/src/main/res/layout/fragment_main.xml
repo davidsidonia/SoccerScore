@@ -25,6 +25,7 @@
                 android:text="JORNADA "
                 android:padding="16dp"/>
 
+        
         <ListView
                 style="@style/MatchListStyle"
                 android:id="@+id/listview_match"
