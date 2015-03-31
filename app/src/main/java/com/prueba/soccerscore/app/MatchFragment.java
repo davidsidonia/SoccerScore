@@ -16,7 +16,15 @@ import com.prueba.soccerscore.app.data.MatchContract;
  * Created by David on 26/03/2015.
  */
 public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String LOG_TAG = MatchFragment.class.getSimpleName();
+
+    private MatchAdapter matchs;
+
+    private ListView listView;
+    private int mPosition = ListView.INVALID_POSITION;
+
+    private static final String SELECTED_KEY = "selected_position";
+
+
     private static final int MATCH_LOADER = 0;
 
     private static final String[] MATCH_COLUMNS = {
@@ -44,7 +52,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int COL_MATCH_RESULT = 8;
     static final int COL_MATCH_LIVE_MINUTE = 9;
 
-    private MatchAdapter matchs;
 
     public interface Callback {
         public void onItemSelected(Uri matchUri);
@@ -83,7 +90,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_match);
+        listView = (ListView) rootView.findViewById(R.id.listview_match);
         listView.setAdapter(matchs);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -97,8 +104,14 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
                     ((Callback) getActivity())
                             .onItemSelected(MatchContract.MatchEntry.buildMatchWithMatchKey(cursor.getString(COL_MATCH_MATCH_KEY)));
                 }
+                mPosition = position;
             }
         });
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
 
         return rootView;
     }
@@ -115,11 +128,23 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         fetchMatch.execute();
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+
     @Override
     public void onStart() {
         super.onStart();
         updateMatch();
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -136,7 +161,15 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+
         matchs.swapCursor(cursor);
+
+        if (mPosition != ListView.INVALID_POSITION) {
+
+            listView.smoothScrollToPosition(mPosition);
+        }
+
+
     }
 
     @Override
