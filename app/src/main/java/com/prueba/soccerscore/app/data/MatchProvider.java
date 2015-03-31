@@ -13,29 +13,23 @@ import android.net.Uri;
  * Created by David on 26/03/2015.
  */
 public class MatchProvider extends ContentProvider {
-    private static final UriMatcher sUriMatcher = buildUriMatcher();
 
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MatchDbHelper mOpenHelper;
     private static final int MATCH = 100;
     private static final int MATCH_WITH_MATH_KEY = 101;
     private static final int SCORE = 102;
-
     private static final SQLiteQueryBuilder sMatchQueryBuilder;
-
     static {
         sMatchQueryBuilder = new SQLiteQueryBuilder();
         sMatchQueryBuilder.setTables(MatchContract.MatchEntry.TABLE_NAME);
     }
-
     private static final String sMatchKeySelection =
             MatchContract.MatchEntry.TABLE_NAME +
                     "." + MatchContract.MatchEntry.COLUMN_MATCH_KEY + " = ? ";
-
-
     private static final String sIdMatchSelection =
             MatchContract.ScoreEntry.TABLE_NAME +
                     "." + MatchContract.ScoreEntry.COLUMN_ID_MATCH + " = ? ";
-
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MatchContract.CONTENT_AUTHORITY;
@@ -44,7 +38,6 @@ public class MatchProvider extends ContentProvider {
         matcher.addURI(authority, MatchContract.PATH_SCORE + "/# ", SCORE);
         return matcher;
     }
-
     private Cursor getMatch(Uri uri, String[] projection, String sortOrder) {
         return sMatchQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
@@ -55,7 +48,6 @@ public class MatchProvider extends ContentProvider {
                 sortOrder
         );
     }
-
     private Cursor getMatchWithMatchID(Uri uri, String[] projection, String sortOrder) {
         String matchId = MatchContract.MatchEntry.getMatch_idFromUri(uri);
         return sMatchQueryBuilder.query(mOpenHelper.getReadableDatabase(),
@@ -67,8 +59,6 @@ public class MatchProvider extends ContentProvider {
                 sortOrder
         );
     }
-
-
     private Cursor getScore(Uri uri, String[] projection, String sortOrder) {
         long matchId = ContentUris.parseId(uri);
         return sMatchQueryBuilder.query(mOpenHelper.getReadableDatabase(),
@@ -80,13 +70,11 @@ public class MatchProvider extends ContentProvider {
                 sortOrder
         );
     }
-
     @Override
     public boolean onCreate() {
         mOpenHelper = new MatchDbHelper(getContext());
         return true;
     }
-
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
@@ -106,7 +94,6 @@ public class MatchProvider extends ContentProvider {
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
     }
-
     @Override
     public String getType(Uri uri) {
         switch (sUriMatcher.match(uri)) {
@@ -120,7 +107,6 @@ public class MatchProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
-
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -129,8 +115,7 @@ public class MatchProvider extends ContentProvider {
             case MATCH: {
                 db.execSQL("DELETE FROM " + MatchContract.MatchEntry.TABLE_NAME);
                 db.insert(MatchContract.MatchEntry.TABLE_NAME, null, values);
-
-                //TODO     me puede hacer falta lo mismo que abajo
+//TODO me puede hacer falta lo mismo que abajo
             }
             case SCORE: {
                 db.execSQL("DELETE FROM " + MatchContract.ScoreEntry.TABLE_NAME);
@@ -147,7 +132,6 @@ public class MatchProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
-
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -158,7 +142,6 @@ public class MatchProvider extends ContentProvider {
                 db.execSQL("DELETE FROM " + MatchContract.MatchEntry.TABLE_NAME);
                 db.beginTransaction();
                 returnCount = 0;
-
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(MatchContract.MatchEntry.TABLE_NAME, null, value);
@@ -167,19 +150,15 @@ public class MatchProvider extends ContentProvider {
                         }
                     }
                     db.setTransactionSuccessful();
-
                 } finally {
                     db.endTransaction();
                 }
-
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
-
             case SCORE:
                 db.execSQL("DELETE FROM " + MatchContract.ScoreEntry.TABLE_NAME);
                 db.beginTransaction();
                 returnCount = 0;
-
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(MatchContract.ScoreEntry.TABLE_NAME, null, value);
@@ -188,28 +167,21 @@ public class MatchProvider extends ContentProvider {
                         }
                     }
                     db.setTransactionSuccessful();
-
                 } finally {
                     db.endTransaction();
                 }
-
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
-
             default:
                 return super.bulkInsert(uri, values);
         }
     }
-
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         return 0;
     }
-
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
     }
 }
-
-

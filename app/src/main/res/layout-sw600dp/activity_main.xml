@@ -6,7 +6,6 @@
               android:divider="?android:attr/dividerHorizontal"
               android:orientation="horizontal"
               tools:context="com.prueba.soccerscore.app.MainActivity">
-
     <fragment
             android:id="@+id/fragment_match"
             android:name="com.prueba.soccerscore.app.MatchFragment"

@@ -13,15 +13,12 @@ import android.view.MenuItem;
 public class MainActivity extends ActionBarActivity implements MatchFragment.Callback {
 
     private boolean mTwoPane;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if (findViewById(R.id.score_container) != null) {
             mTwoPane = true;
-
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.score_container, new ScoreFragment())
@@ -31,34 +28,26 @@ public class MainActivity extends ActionBarActivity implements MatchFragment.Cal
             mTwoPane = false;
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-        if (id == R.id.action_refresh) {
+        if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-
     @Override
     public void onItemSelected(Uri contentUri) {
         if (mTwoPane) {
-
             Bundle args = new Bundle();
             args.putParcelable(ScoreFragment.DETAIL_URI, contentUri);
-
             ScoreFragment fragment = new ScoreFragment();
             fragment.setArguments(args);
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.score_container, fragment)
                     .commit();
@@ -68,5 +57,4 @@ public class MainActivity extends ActionBarActivity implements MatchFragment.Cal
             startActivity(intent);
         }
     }
-
 }

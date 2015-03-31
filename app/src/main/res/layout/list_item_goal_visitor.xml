@@ -3,7 +3,6 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
     <TextView
             android:id="@+id/list_item_marcador2"
             android:layout_width="0dp"
@@ -15,7 +14,6 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:text="1-1"
             android:padding="16dp"/>
-
     <TextView
             android:id="@+id/list_item_minute2"
             android:layout_width="wrap_content"
@@ -26,7 +24,6 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:text="48'"
             android:padding="16dp"/>
-
     <TextView
             android:id="@+id/list_item_nombre_jugador_visitor"
             android:layout_width="0dp"
@@ -38,5 +35,4 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:text="Messi"
             android:padding="16dp"/>
-
 </LinearLayout>

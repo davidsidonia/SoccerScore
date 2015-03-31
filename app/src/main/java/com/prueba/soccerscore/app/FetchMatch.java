@@ -21,17 +21,13 @@ import java.util.Vector;
  * Created by David on 26/03/2015.
  */
 public class FetchMatch extends AsyncTask<Void, Void, Void> {
+
     private final Context mContext;
-
     private final String LOG_TAG = FetchMatch.class.getSimpleName();
-
     public FetchMatch(Context context) {
         mContext = context;
     }
-
-
     private void getMatchDataFromJson(String matchJsonStr) throws JSONException {
-
         final String OWM_MATCH = "match";
         final String OWM_ID = "id";
         final String OWM_ROUND = "round";
@@ -42,13 +38,10 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
         final String OWM_MINUTE = "minute";
         final String OWM_RESULT = "result";
         final String OWM_LIVE_MINUTE = "live_minute";
-
         try {
             JSONObject matchJson = new JSONObject(matchJsonStr);
             JSONArray matchArray = matchJson.getJSONArray(OWM_MATCH);
-
             Vector<ContentValues> cVVector = new Vector<ContentValues>(matchArray.length());
-
             for (int i = 0; i < matchArray.length(); i++) {
                 String id;
                 String round;
@@ -59,9 +52,7 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
                 String minute;
                 String result;
                 String live_minute;
-
                 JSONObject match = matchArray.getJSONObject(i);
-
                 id = match.getString(OWM_ID);
                 round = match.getString(OWM_ROUND);
                 local = match.getString(OWM_LOCAL);
@@ -71,9 +62,7 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
                 minute = match.getString(OWM_MINUTE);
                 result = match.getString(OWM_RESULT);
                 live_minute = match.getString(OWM_LIVE_MINUTE);
-
                 ContentValues matchValues = new ContentValues();
-
                 matchValues.put(MatchEntry.COLUMN_MATCH_KEY, id);
                 matchValues.put(MatchEntry.COLUMN_ROUND, round);
                 matchValues.put(MatchEntry.COLUMN_LOCAL, local);
@@ -83,10 +72,8 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
                 matchValues.put(MatchEntry.COLUMN_MINUTE, minute);
                 matchValues.put(MatchEntry.COLUMN_RESULT, result);
                 matchValues.put(MatchEntry.COLUMN_LIVE_MINUTE, live_minute);
-
                 cVVector.add(matchValues);
             }
-
             int inserted = 0;
             if (cVVector.size() > 0) {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
@@ -94,37 +81,27 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
                 inserted = mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
             }
             Log.d(LOG_TAG, "FetchMatch Complete. " + inserted + " Inserted");
-
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-
     }
-
     @Override
     protected Void doInBackground(Void... params) {
-
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-
         String matchsJsonStr = null;
-
         try {
-
             URL url = new URL("http://www.resultados-futbol.com/scripts/api/api.php?format=json&req=matchs&key=7e210fae6e101bc9a25b2b432d00e501&league=1");
-
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
-
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 return null;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
-
             String line;
             while ((line = reader.readLine()) != null) {
                 buffer.append(line + "\n");
@@ -134,14 +111,11 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
             }
             matchsJsonStr = buffer.toString();
             getMatchDataFromJson(matchsJsonStr);
-
         } catch (IOException e) {
             Log.e("LOG_TAG", "Error ", e);
-
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
-
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -154,8 +128,6 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
                 }
             }
         }
-
         return null;
     }
-
 }
