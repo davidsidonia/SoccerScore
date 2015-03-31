@@ -51,7 +51,6 @@ public class Utility {
         return -1;
     }
 
-
     public static int getEscudoParaVistaScore(String team) {
 
         if (team.equals("Almería")) {
