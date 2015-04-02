@@ -10,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.prueba.soccerscore.app.data.MatchContract;
 
 /*
@@ -22,6 +23,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     private int mPosition = ListView.INVALID_POSITION;
     private static final String SELECTED_KEY = "selected_position";
     private static final int MATCH_LOADER = 0;
+
     private static final String[] MATCH_COLUMNS = {
             MatchContract.MatchEntry.TABLE_NAME + "." + MatchContract.MatchEntry._ID,
             MatchContract.MatchEntry.COLUMN_MATCH_KEY,
@@ -44,20 +46,25 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int COL_MATCH_MINUTE = 7;
     static final int COL_MATCH_RESULT = 8;
     static final int COL_MATCH_LIVE_MINUTE = 9;
+
     public interface Callback {
         public void onItemSelected(Uri matchUri);
     }
+
     public MatchFragment() {
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.matchfragment, menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -67,10 +74,12 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         matchs = new MatchAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
         listView = (ListView) rootView.findViewById(R.id.listview_match);
         listView.setAdapter(matchs);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -84,20 +93,34 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
                 mPosition = position;
             }
         });
+
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
+
+        Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
+
+        Cursor cur = getActivity().getContentResolver().query(matchUri,
+                MATCH_COLUMNS, null, null, null);
+        cur.moveToFirst();
+
+        TextView textViewJornada = (TextView) rootView.findViewById(R.id.textView_jornada);
+        textViewJornada.setText("JORNADA  " + cur.getString(COL_MATCH_ROUND));
+
         return rootView;
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MATCH_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
+
     private void updateMatch() {
         FetchMatch fetchMatch = new FetchMatch(getActivity());
         fetchMatch.execute();
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mPosition != ListView.INVALID_POSITION) {
@@ -105,11 +128,13 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         }
         super.onSaveInstanceState(outState);
     }
+
     @Override
     public void onStart() {
         super.onStart();
         updateMatch();
     }
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
@@ -120,6 +145,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
                 null,
                 null);
     }
+
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         matchs.swapCursor(cursor);
@@ -127,8 +153,10 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
             listView.smoothScrollToPosition(mPosition);
         }
     }
+
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         matchs.swapCursor(null);
     }
+
 }
