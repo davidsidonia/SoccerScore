@@ -98,14 +98,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
 
-        Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
-
-        Cursor cur = getActivity().getContentResolver().query(matchUri,
-                MATCH_COLUMNS, null, null, null);
-        cur.moveToFirst();
-
-        TextView textViewJornada = (TextView) rootView.findViewById(R.id.textView_jornada);
-        textViewJornada.setText("JORNADA  " + cur.getString(COL_MATCH_ROUND));
+        ponerNombreDeLaJornada(rootView);
 
         return rootView;
     }
@@ -157,6 +150,24 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         matchs.swapCursor(null);
+    }
+
+
+    public void ponerNombreDeLaJornada(View rootView) {
+
+        Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
+
+        Cursor cur = getActivity().getContentResolver().query(matchUri,
+                MATCH_COLUMNS, null, null, null);
+        if (cur != null) {
+
+            cur.moveToFirst();
+
+            TextView textViewJornada = (TextView) rootView.findViewById(R.id.textView_jornada);
+            textViewJornada.setText("JORNADA  ");
+            //    + cur.getString(COL_MATCH_ROUND));
+        }
+
     }
 
 }

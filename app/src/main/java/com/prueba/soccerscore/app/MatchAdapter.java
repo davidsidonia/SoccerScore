@@ -60,17 +60,18 @@ public class MatchAdapter extends CursorAdapter {
         String result = cursor.getString(MatchFragment.COL_MATCH_RESULT);
         String visitor = cursor.getString(MatchFragment.COL_MATCH_VISITOR);
 //TODO 3 INICIO *********************************************************************
-        String round = cursor.getString(MatchFragment.COL_MATCH_VISITOR);
+
         String date = cursor.getString(MatchFragment.COL_MATCH_DATE);
         String hour = cursor.getString(MatchFragment.COL_MATCH_HOUR);
         String minute = cursor.getString(MatchFragment.COL_MATCH_MINUTE);
         String live_minute = cursor.getString(MatchFragment.COL_MATCH_LIVE_MINUTE);
-        String jornada = "JORNADA " + round;
+
         String horario = hour + ":" + minute;
         String dia = date.substring(8, 10);
         String mes = date.substring(5, 7);
         String fechaAlDerecho = dia + "/" + mes;
         String resultado = result;
+
         if (!result.equals("x-x")) {
             horario = "";
             fechaAlDerecho = "";
@@ -99,7 +100,7 @@ public class MatchAdapter extends CursorAdapter {
         viewHolder.textViewVisitor.setText(visitor);
         viewHolder.iconViewVisitor.setImageResource(Utility.getEscudoParaVistaMatch(visitor));
 //TODO 4 INICIO *********************************************************************
-// viewHolder.textViewJornada.setText(jornada);
+
         viewHolder.textViewHorario.setText(horario);
         viewHolder.textViewfechaAlDerecho.setText(fechaAlDerecho);
         viewHolder.textViewResultado.setText(resultado);
