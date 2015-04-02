@@ -27,6 +27,7 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
     public FetchMatch(Context context) {
         mContext = context;
     }
+
     private void getMatchDataFromJson(String matchJsonStr) throws JSONException {
         final String OWM_MATCH = "match";
         final String OWM_ID = "id";
@@ -38,6 +39,7 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
         final String OWM_MINUTE = "minute";
         final String OWM_RESULT = "result";
         final String OWM_LIVE_MINUTE = "live_minute";
+
         try {
             JSONObject matchJson = new JSONObject(matchJsonStr);
             JSONArray matchArray = matchJson.getJSONArray(OWM_MATCH);
@@ -81,16 +83,19 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
                 inserted = mContext.getContentResolver().bulkInsert(MatchEntry.CONTENT_URI, cvArray);
             }
             Log.d(LOG_TAG, "FetchMatch Complete. " + inserted + " Inserted");
+
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
     }
+
     @Override
     protected Void doInBackground(Void... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-        String matchsJsonStr = null;
+        String matchsJsonStr;
+
         try {
             URL url = new URL("http://www.resultados-futbol.com/scripts/api/api.php?format=json&req=matchs&key=7e210fae6e101bc9a25b2b432d00e501&league=1");
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -111,11 +116,14 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
             }
             matchsJsonStr = buffer.toString();
             getMatchDataFromJson(matchsJsonStr);
+
         } catch (IOException e) {
             Log.e("LOG_TAG", "Error ", e);
+
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
+
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

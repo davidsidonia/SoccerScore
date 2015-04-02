@@ -19,7 +19,6 @@
                 android:gravity="center"
                 android:fontFamily="sans-serif-condensed"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:text="JORNADA "
                 android:padding="16dp"/>
         <ListView
                 style="@style/MatchListStyle"
