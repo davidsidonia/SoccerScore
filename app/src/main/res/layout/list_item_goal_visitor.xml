@@ -11,7 +11,7 @@
             android:layout_gravity="center"
             android:gravity="left"
             android:fontFamily="sans-serif-condensed"
-            android:textAppearance="?android:textAppearanceSmall"
+            android:textSize="14sp"
             android:text="1-1"
             android:padding="16dp"/>
     <TextView
@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:gravity="left"
             android:fontFamily="sans-serif-condensed"
-            android:textAppearance="?android:textAppearanceSmall"
+            android:textSize="14sp"
             android:text="48'"
             android:padding="16dp"/>
     <TextView
@@ -32,7 +32,7 @@
             android:layout_gravity="center"
             android:gravity="left"
             android:fontFamily="sans-serif-condensed"
-            android:textAppearance="?android:textAppearanceSmall"
+            android:textSize="14sp"
             android:text="Messi"
             android:padding="16dp"/>
 </LinearLayout>

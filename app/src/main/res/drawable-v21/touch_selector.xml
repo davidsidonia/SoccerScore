@@ -4,6 +4,6 @@
         <ripple android:color="@color/grey"/>
     </item>
     <item android:state_activated="true"
-          android:drawable="@color/sunshine_light_blue"/>
+          android:drawable="@color/light_blue"/>
     <item android:drawable="@android:color/transparent"/>
 </selector>

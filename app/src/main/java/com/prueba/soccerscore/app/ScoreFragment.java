@@ -84,18 +84,24 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
             String visitor = data.getString(COL_MATCH_VISITOR);
             String result = data.getString(COL_MATCH_RESULT);
             String live_minute = data.getString(COL_MATCH_LIVE_MINUTE);
+
             if (live_minute.equals("DES") || live_minute.equals("des") || live_minute.equals("Des")) {
-                live_minute = "DESCANSO";
+                live_minute = "DESC";
             } else if (live_minute.equals("")) {
                 if (result.equals("x-x")) {
-                    live_minute = null;
+                    live_minute = "";
                 } else {
                     live_minute = "FIN";
                 }
+            } else {
+                live_minute = live_minute + "'";
             }
+
+
             if (result.equals("x-x")) {
                 result = " - ";
             }
+
             iconViewEscudoLocal.setImageResource(Utility.getEscudoParaVistaScore(local));
             iconViewEscudoVisitor.setImageResource(Utility.getEscudoParaVistaScore(visitor));
             localTextView.setText(local);

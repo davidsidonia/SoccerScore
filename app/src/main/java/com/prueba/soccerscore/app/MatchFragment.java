@@ -164,7 +164,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
             cur.moveToFirst();
 
             TextView textViewJornada = (TextView) rootView.findViewById(R.id.textView_jornada);
-            textViewJornada.setText("JORNADA  ");
+            textViewJornada.setText("JORNADA  MATCH_FRAGMENT");
             //    + cur.getString(COL_MATCH_ROUND));
         }
 

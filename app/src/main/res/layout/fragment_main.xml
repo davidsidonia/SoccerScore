@@ -18,7 +18,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:fontFamily="sans-serif-condensed"
-                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="18sp"
                 android:padding="16dp"/>
         <ListView
                 style="@style/MatchListStyle"
