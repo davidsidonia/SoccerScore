@@ -24,6 +24,8 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     private static final String SELECTED_KEY = "selected_position";
     private static final int MATCH_LOADER = 0;
 
+    TextView jornadaTextView;
+
     private static final String[] MATCH_COLUMNS = {
             MatchContract.MatchEntry.TABLE_NAME + "." + MatchContract.MatchEntry._ID,
             MatchContract.MatchEntry.COLUMN_MATCH_KEY,
@@ -80,6 +82,8 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         matchs = new MatchAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        jornadaTextView = (TextView) rootView.findViewById(R.id.textView_jornada);
+
         listView = (ListView) rootView.findViewById(R.id.listview_match);
         listView.setAdapter(matchs);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -97,8 +101,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
-
-        ponerNombreDeLaJornada(rootView);
 
         return rootView;
     }
@@ -142,6 +144,11 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         matchs.swapCursor(cursor);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            jornadaTextView.setText("JORNADA  " + cursor.getString(COL_MATCH_ROUND));
+        }
+
         if (mPosition != ListView.INVALID_POSITION) {
             listView.smoothScrollToPosition(mPosition);
         }
@@ -150,24 +157,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         matchs.swapCursor(null);
-    }
-
-
-    public void ponerNombreDeLaJornada(View rootView) {
-
-        Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
-
-        Cursor cur = getActivity().getContentResolver().query(matchUri,
-                MATCH_COLUMNS, null, null, null);
-        if (cur != null) {
-
-            cur.moveToFirst();
-
-            TextView textViewJornada = (TextView) rootView.findViewById(R.id.textView_jornada);
-            textViewJornada.setText("JORNADA  MATCH_FRAGMENT");
-            //    + cur.getString(COL_MATCH_ROUND));
-        }
-
     }
 
 }
