@@ -27,7 +27,11 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
             MatchContract.MatchEntry.COLUMN_LOCAL,
             MatchContract.MatchEntry.COLUMN_VISITOR,
             MatchContract.MatchEntry.COLUMN_RESULT,
-            MatchContract.MatchEntry.COLUMN_LIVE_MINUTE
+            MatchContract.MatchEntry.COLUMN_LIVE_MINUTE,
+//            MatchContract.ScoreEntry.COLUMN_MINUTE_SCORE,
+//            MatchContract.ScoreEntry.COLUMN_ACTION,
+//            MatchContract.ScoreEntry.COLUMN_PLAYER,
+//            MatchContract.ScoreEntry.COLUMN_TEAM
     };
 
     static final int COL_MATCH_ID = 0;
@@ -36,6 +40,12 @@ public class ScoreFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int COL_MATCH_VISITOR = 3;
     static final int COL_MATCH_RESULT = 4;
     static final int COL_MATCH_LIVE_MINUTE = 5;
+//    static final int COLUMN_MINUTE_SCORE = 6;
+//    static final int COLUMN_ACTION = 7;
+//    static final int COLUMN_PLAYER = 8;
+    // static final int COLUMN_TEAM = 9;
+
+
 
     ImageView iconViewEscudoLocal;
     ImageView iconViewEscudoVisitor;

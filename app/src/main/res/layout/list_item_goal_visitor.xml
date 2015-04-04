@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <TextView
-            android:id="@+id/list_item_marcador2"
+            android:id="@+id/list_item_marcador_visitor"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -15,7 +15,7 @@
             android:text="1-1"
             android:padding="16dp"/>
     <TextView
-            android:id="@+id/list_item_minute2"
+            android:id="@+id/list_item_minute_visitor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

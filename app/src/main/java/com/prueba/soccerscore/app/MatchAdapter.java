@@ -34,9 +34,11 @@ public class MatchAdapter extends CursorAdapter {
 
         }
     }
+
     public MatchAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.list_item_match, parent, false);
@@ -44,6 +46,7 @@ public class MatchAdapter extends CursorAdapter {
         view.setTag(viewHolder);
         return view;
     }
+
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
