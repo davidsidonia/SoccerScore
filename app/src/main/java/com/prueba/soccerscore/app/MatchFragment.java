@@ -19,12 +19,13 @@ import com.prueba.soccerscore.app.data.MatchContract;
 public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private MatchAdapter matchs;
-    private ListView listView;
+
+    private ListView listViewMatch;
+    private TextView jornadaTextView;
+
     private int mPosition = ListView.INVALID_POSITION;
     private static final String SELECTED_KEY = "selected_position";
     private static final int MATCH_LOADER = 0;
-
-    TextView jornadaTextView;
 
     private static final String[] MATCH_COLUMNS = {
             MatchContract.MatchEntry.TABLE_NAME + "." + MatchContract.MatchEntry._ID,
@@ -84,9 +85,9 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
 
         jornadaTextView = (TextView) rootView.findViewById(R.id.textView_jornada);
 
-        listView = (ListView) rootView.findViewById(R.id.listview_match);
-        listView.setAdapter(matchs);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewMatch = (ListView) rootView.findViewById(R.id.listview_match);
+        listViewMatch.setAdapter(matchs);
+        listViewMatch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
@@ -133,7 +134,8 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
-        return new CursorLoader(getActivity(),
+        return new CursorLoader(
+                getActivity(),
                 matchUri,
                 MATCH_COLUMNS,
                 null,
@@ -150,7 +152,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         }
 
         if (mPosition != ListView.INVALID_POSITION) {
-            listView.smoothScrollToPosition(mPosition);
+            listViewMatch.smoothScrollToPosition(mPosition);
         }
     }
 

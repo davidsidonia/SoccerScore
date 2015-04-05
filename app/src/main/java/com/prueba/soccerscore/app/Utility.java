@@ -1,6 +1,6 @@
 package com.prueba.soccerscore.app;
 
-/**
+/*
  * Created by David on 28/03/2015.
  */
 public class Utility {

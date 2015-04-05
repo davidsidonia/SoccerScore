@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-/**
+/*
  * Created by David on 03/04/2015.
  */
 public class ScoreAdapter extends CursorAdapter {
@@ -59,7 +59,7 @@ public class ScoreAdapter extends CursorAdapter {
 
 //        if (action.equals("Gol propia puerta")){
 //            player = player + " (pp)";
-//        } else if (action.equals("Gol penalti")){
+//        } else if (action.equals("Gol de penalti")){
 //            player = player + " (p)";
 //        }
 //
@@ -76,9 +76,9 @@ public class ScoreAdapter extends CursorAdapter {
 //        viewHolder.textViewMinutoLocal.setText(minute);
 //        viewHolder.textViewMarcadorLocal.setText(marcador);
 
-        viewHolder.textViewJugadorLocal.setText("2165");
-        viewHolder.textViewMinutoLocal.setText("df");
-        viewHolder.textViewMarcadorLocal.setText("0-5");
+        viewHolder.textViewJugadorLocal.setText("Pepito el caja");
+        viewHolder.textViewMinutoLocal.setText("25");
+        viewHolder.textViewMarcadorLocal.setText("0-3");
     }
 
 

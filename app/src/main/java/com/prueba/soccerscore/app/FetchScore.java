@@ -34,7 +34,7 @@ public class FetchScore extends AsyncTask<String, Void, Void> {
 
         final String OWM_EVENTS = "events";
         final String OWM_GOALS = "goals";
-        final String OWM_MINUTE = "minute";
+        final String OWM_MINUTE_SCORE = "minute";
         final String OWM_ACTION = "action";
         final String OWM_PLAYER = "player";
         final String OWM_TEAM = "team";
@@ -48,20 +48,20 @@ public class FetchScore extends AsyncTask<String, Void, Void> {
             Vector<ContentValues> cVVector = new Vector<ContentValues>(goalsArray.length());
             for (int i = 0; i < goalsArray.length(); i++) {
 
-                String minute;
+                String minuteScore;
                 String action;
                 String player;
                 String team;
 
                 JSONObject match = goalsArray.getJSONObject(i);
 
-                minute = match.getString(OWM_MINUTE);
+                minuteScore = match.getString(OWM_MINUTE_SCORE);
                 action = match.getString(OWM_ACTION);
                 player = match.getString(OWM_PLAYER);
                 team = match.getString(OWM_TEAM);
 
                 ContentValues matchValues = new ContentValues();
-                matchValues.put(MatchContract.ScoreEntry.COLUMN_MINUTE_SCORE, minute);
+                matchValues.put(MatchContract.ScoreEntry.COLUMN_MINUTE_SCORE, minuteScore);
                 matchValues.put(MatchContract.ScoreEntry.COLUMN_ACTION, action);
                 matchValues.put(MatchContract.ScoreEntry.COLUMN_PLAYER, player);
                 matchValues.put(MatchContract.ScoreEntry.COLUMN_TEAM, team);
