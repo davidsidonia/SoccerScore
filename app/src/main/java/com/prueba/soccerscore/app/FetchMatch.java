@@ -22,8 +22,10 @@ import java.util.Vector;
  */
 public class FetchMatch extends AsyncTask<Void, Void, Void> {
 
+
     private final Context mContext;
     private final String LOG_TAG = FetchMatch.class.getSimpleName();
+
     public FetchMatch(Context context) {
         mContext = context;
     }
@@ -44,6 +46,7 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
             JSONObject matchJson = new JSONObject(matchJsonStr);
             JSONArray matchArray = matchJson.getJSONArray(OWM_MATCH);
             Vector<ContentValues> cVVector = new Vector<ContentValues>(matchArray.length());
+
             for (int i = 0; i < matchArray.length(); i++) {
                 String id;
                 String round;
@@ -76,7 +79,9 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
                 matchValues.put(MatchEntry.COLUMN_LIVE_MINUTE, live_minute);
                 cVVector.add(matchValues);
             }
+
             int inserted = 0;
+
             if (cVVector.size() > 0) {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
@@ -103,17 +108,22 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
             urlConnection.connect();
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
+
             if (inputStream == null) {
                 return null;
             }
+
             reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
+
             while ((line = reader.readLine()) != null) {
                 buffer.append(line + "\n");
             }
+
             if (buffer.length() == 0) {
                 return null;
             }
+
             matchsJsonStr = buffer.toString();
             getMatchDataFromJson(matchsJsonStr);
 
@@ -128,9 +138,12 @@ public class FetchMatch extends AsyncTask<Void, Void, Void> {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
+
             if (reader != null) {
+
                 try {
                     reader.close();
+
                 } catch (final IOException e) {
                     Log.e("LOG_TAG", "Error closing stream", e);
                 }

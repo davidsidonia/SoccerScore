@@ -28,7 +28,6 @@ public class MainActivity extends ActionBarActivity implements MatchFragment.Cal
         }
     }
 
-
     @Override
     public void onItemSelected(Uri contentUri) {
         if (mTwoPane) {

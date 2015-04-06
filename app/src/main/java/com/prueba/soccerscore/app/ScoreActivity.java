@@ -22,5 +22,4 @@ public class ScoreActivity extends ActionBarActivity {
                     .commit();
         }
     }
-
 }

@@ -1,6 +1,7 @@
 package com.prueba.soccerscore.app.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -15,24 +16,21 @@ public class MatchProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MatchDbHelper mOpenHelper;
+
     private static final int MATCH = 100;
     private static final int MATCH_WITH_MATH_KEY = 101;
     private static final int SCORE = 102;
+
     private static final SQLiteQueryBuilder sMatchQueryBuilder;
-    private static final SQLiteQueryBuilder sScoreQueryBuilder;
+
     static {
         sMatchQueryBuilder = new SQLiteQueryBuilder();
         sMatchQueryBuilder.setTables(MatchContract.MatchEntry.TABLE_NAME);
     }
 
-    static {
-        sScoreQueryBuilder = new SQLiteQueryBuilder();
-        sScoreQueryBuilder.setTables(MatchContract.ScoreEntry.TABLE_NAME);
-    }
     private static final String sMatchKeySelection =
             MatchContract.MatchEntry.TABLE_NAME +
                     "." + MatchContract.MatchEntry.COLUMN_MATCH_KEY + " = ? ";
-
     private static final String sIdMatchSelection =
             MatchContract.ScoreEntry.TABLE_NAME +
                     "." + MatchContract.ScoreEntry.COLUMN_ID_MATCH + " = ? ";
@@ -42,7 +40,7 @@ public class MatchProvider extends ContentProvider {
         final String authority = MatchContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, MatchContract.PATH_MATCH, MATCH);
         matcher.addURI(authority, MatchContract.PATH_MATCH + "/*", MATCH_WITH_MATH_KEY);
-        matcher.addURI(authority, MatchContract.PATH_SCORE, SCORE);
+        matcher.addURI(authority, MatchContract.PATH_SCORE + "/# ", SCORE);
         return matcher;
     }
 
@@ -70,10 +68,11 @@ public class MatchProvider extends ContentProvider {
     }
 
     private Cursor getScore(Uri uri, String[] projection, String sortOrder) {
-        return sScoreQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        long matchId = ContentUris.parseId(uri);
+        return sMatchQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
-                null,
-                null,
+                sIdMatchSelection,
+                new String[]{Long.toString(matchId)},
                 null,
                 null,
                 sortOrder
@@ -89,8 +88,6 @@ public class MatchProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
-        //este 'match' es un metodo de UriMatcher (no tiene nada que ver con las variables match que he creado
-        // yo al tratarse la aplicacion de partidos)
         switch (sUriMatcher.match(uri)) {
             case MATCH:
                 retCursor = getMatch(uri, projection, sortOrder);
@@ -110,8 +107,6 @@ public class MatchProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        //este 'match' es un metodo de UriMatcher (no tiene nada que ver con las variables match que he creado
-        // yo al tratarse la aplicacion de partidos)
         switch (sUriMatcher.match(uri)) {
             case MATCH:
                 return MatchContract.MatchEntry.CONTENT_TYPE;
@@ -127,39 +122,31 @@ public class MatchProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        //  Uri returnUri;
-
-        //este 'match' es un metodo de UriMatcher (no tiene nada que ver con las variables match que he creado
-        // yo al tratarse la aplicacion de partidos)
+        Uri returnUri;
         switch (sUriMatcher.match(uri)) {
             case MATCH: {
                 db.execSQL("DELETE FROM " + MatchContract.MatchEntry.TABLE_NAME);
                 db.insert(MatchContract.MatchEntry.TABLE_NAME, null, values);
-//TODO me puede hacer falta lo mismo que abajo
             }
             case SCORE: {
                 db.execSQL("DELETE FROM " + MatchContract.ScoreEntry.TABLE_NAME);
-                db.insert(MatchContract.ScoreEntry.TABLE_NAME, null, values);
-
-//                long _id = db.insert(MatchContract.ScoreEntry.TABLE_NAME, null, values);
-//                if (_id > 0)
-//                    returnUri = MatchContract.ScoreEntry.buildScoreUri(_id);
-//                else
-//                    throw new android.database.SQLException("Failed to insert row into " + uri);
-//                break;
+                long _id = db.insert(MatchContract.ScoreEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = MatchContract.ScoreEntry.buildScoreUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
             }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        // getContext().getContentResolver().notifyChange(uri, null);
-        // return returnUri;
+        getContext().getContentResolver().notifyChange(uri, null);
+        return returnUri;
     }
 
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        //este 'match' es un metodo de UriMatcher (no tiene nada que ver con las variables match que he creado
-        // yo al tratarse la aplicacion de partidos)
         final int match = sUriMatcher.match(uri);
         int returnCount;
         switch (match) {
@@ -211,5 +198,4 @@ public class MatchProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
     }
-
 }
