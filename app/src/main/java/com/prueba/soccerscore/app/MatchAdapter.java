@@ -23,7 +23,6 @@ public class MatchAdapter extends CursorAdapter {
         public final TextView textViewVisitor;
         public final ImageView iconViewVisitor;
 
-
         public ViewHolder(View view) {
             iconViewLocal = (ImageView) view.findViewById(R.id.list_item_escudo_local_match);
             textViewLocal = (TextView) view.findViewById(R.id.list_item_local_team);
@@ -31,7 +30,6 @@ public class MatchAdapter extends CursorAdapter {
             textViewLiveHora = (TextView) view.findViewById(R.id.list_item_live_hora);
             textViewVisitor = (TextView) view.findViewById(R.id.list_item_visitor_team);
             iconViewVisitor = (ImageView) view.findViewById(R.id.list_item_escudo_visitor_match);
-
         }
     }
 
@@ -59,16 +57,12 @@ public class MatchAdapter extends CursorAdapter {
         String hour = cursor.getString(MatchFragment.COL_MATCH_HOUR);
         String minute = cursor.getString(MatchFragment.COL_MATCH_MINUTE);
 
-
         String horario = hour + ":" + minute;
         String dia = date.substring(8, 10);
         String mes = date.substring(5, 7);
         String fechaAlDerecho = dia + "/" + mes;
-
-
         String resultFecha = "";
         String liveHora = "";
-
 
         if (live_minute.equals("DES") || live_minute.equals("des") || live_minute.equals("Des")) {
             live_minute = "DESC";
@@ -88,13 +82,11 @@ public class MatchAdapter extends CursorAdapter {
             liveHora = live_minute;
         }
 
-
         viewHolder.iconViewLocal.setImageResource(Utility.getEscudoParaVistaMatch(local));
         viewHolder.textViewLocal.setText(local);
         viewHolder.textViewResultFecha.setText(resultFecha);
         viewHolder.textViewLiveHora.setText(liveHora);
         viewHolder.textViewVisitor.setText(visitor);
         viewHolder.iconViewVisitor.setImageResource(Utility.getEscudoParaVistaMatch(visitor));
-
     }
 }

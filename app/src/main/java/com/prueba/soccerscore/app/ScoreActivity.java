@@ -14,12 +14,7 @@ public class ScoreActivity extends ActionBarActivity {
         setContentView(R.layout.activity_score);
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
-            arguments.putString("loc", getIntent().getStringExtra("local"));
-            arguments.putString("vis", getIntent().getStringExtra("visitante"));
-            arguments.putString("res", getIntent().getStringExtra("resultado"));
-            arguments.putString("liv", getIntent().getStringExtra("liveMinute"));
-            arguments.putString("mKey", getIntent().getStringExtra("matchKey"));
-
+            arguments.putParcelable(ScoreFragment.DETAIL_URI, getIntent().getData());
             ScoreFragment fragment = new ScoreFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -27,5 +22,4 @@ public class ScoreActivity extends ActionBarActivity {
                     .commit();
         }
     }
-
 }
