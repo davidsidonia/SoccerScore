@@ -14,16 +14,13 @@ public class MatchContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_MATCH = "match";
     public static final String PATH_SCORE = "score";
-
     public static final class MatchEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MATCH).build();
-
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MATCH;
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MATCH;
-
         public static final String TABLE_NAME = "match";
         public static final String COLUMN_MATCH_KEY = "match_id";
         public static final String COLUMN_ROUND = "round";
@@ -47,19 +44,16 @@ public class MatchContract {
     public static final class ScoreEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_SCORE).build();
-
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SCORE;
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_SCORE;
-
         public static final String TABLE_NAME = "score";
         public static final String COLUMN_ID_MATCH = "id_match";
         public static final String COLUMN_MINUTE_SCORE = "minute";
         public static final String COLUMN_ACTION = "action";
         public static final String COLUMN_PLAYER = "player";
         public static final String COLUMN_TEAM = "team";
-
         public static Uri buildScoreUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }

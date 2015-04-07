@@ -19,11 +19,13 @@
             android:fontFamily="sans-serif-condensed"
             android:textSize="14sp"
             android:padding="16dp"/>
+
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
-        <TextView
+
+    <TextView
                 android:id="@+id/list_item_result_fecha"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -40,7 +42,9 @@
                 android:gravity="top|center"
                 android:fontFamily="sans-serif-condensed"
                 android:textSize="14sp"/>
+
     </LinearLayout>
+
     <TextView
             android:id="@+id/list_item_visitor_team"
             android:layout_width="0dp"
@@ -56,4 +60,5 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
 </LinearLayout>

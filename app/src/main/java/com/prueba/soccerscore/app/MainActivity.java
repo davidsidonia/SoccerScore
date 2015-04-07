@@ -1,7 +1,6 @@
 package com.prueba.soccerscore.app;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
@@ -28,19 +27,24 @@ public class MainActivity extends ActionBarActivity implements MatchFragment.Cal
         }
     }
 
+
     @Override
-    public void onItemSelected(Uri contentUri) {
+    public void onItemSelected(String[] arrayString) {
         if (mTwoPane) {
-            Bundle args = new Bundle();
-            args.putParcelable(ScoreFragment.DETAIL_URI, contentUri);
-            ScoreFragment fragment = new ScoreFragment();
-            fragment.setArguments(args);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.score_container, fragment)
-                    .commit();
+//            Bundle args = new Bundle();
+//            args.putParcelable(ScoreFragment.DETAIL_URI, contentUri);
+//            ScoreFragment fragment = new ScoreFragment();
+//            fragment.setArguments(args);
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.score_container, fragment)
+//                    .commit();
         } else {
             Intent intent = new Intent(this, ScoreActivity.class)
-                    .setData(contentUri);
+                    .putExtra("local", arrayString[0])
+                    .putExtra("visitante", arrayString[1])
+                    .putExtra("resultado", arrayString[2])
+                    .putExtra("liveMinute", arrayString[3])
+                    .putExtra("matchKey", arrayString[4]);
             startActivity(intent);
         }
     }

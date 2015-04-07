@@ -19,11 +19,15 @@ import com.prueba.soccerscore.app.data.MatchContract;
 public class MatchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private MatchAdapter matchs;
-    private ListView listView;
+
+    String[] arrayString = new String[5];
+
+    private ListView listViewMatch;
+    private TextView jornadaTextView;
+
     private int mPosition = ListView.INVALID_POSITION;
     private static final String SELECTED_KEY = "selected_position";
     private static final int MATCH_LOADER = 0;
-    TextView jornadaTextView;
 
     private static final String[] MATCH_COLUMNS = {
             MatchContract.MatchEntry.TABLE_NAME + "." + MatchContract.MatchEntry._ID,
@@ -37,7 +41,6 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
             MatchContract.MatchEntry.COLUMN_RESULT,
             MatchContract.MatchEntry.COLUMN_LIVE_MINUTE
     };
-
     static final int COL_MATCH_ID = 0;
     static final int COL_MATCH_MATCH_KEY = 1;
     static final int COL_MATCH_ROUND = 2;
@@ -50,7 +53,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int COL_MATCH_LIVE_MINUTE = 9;
 
     public interface Callback {
-        public void onItemSelected(Uri matchUri);
+        public void onItemSelected(String[] array);
     }
 
     public MatchFragment() {
@@ -80,21 +83,27 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         matchs = new MatchAdapter(getActivity(), null, 0);
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         jornadaTextView = (TextView) rootView.findViewById(R.id.textView_jornada);
 
-        listView = (ListView) rootView.findViewById(R.id.listview_match);
-        listView.setAdapter(matchs);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        listViewMatch = (ListView) rootView.findViewById(R.id.listview_match);
+        listViewMatch.setAdapter(matchs);
+        listViewMatch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+
+                arrayString[0] = cursor.getString(COL_MATCH_LOCAL);
+                arrayString[1] = cursor.getString(COL_MATCH_VISITOR);
+                arrayString[2] = cursor.getString(COL_MATCH_RESULT);
+                arrayString[3] = cursor.getString(COL_MATCH_LIVE_MINUTE);
+                arrayString[4] = cursor.getString(COL_MATCH_MATCH_KEY);
+
+
                 if (cursor != null) {
                     ((Callback) getActivity())
-                            .onItemSelected(MatchContract.MatchEntry.buildMatchWithMatchKey(cursor.getString(COL_MATCH_MATCH_KEY)));
+                            .onItemSelected(arrayString);
                 }
                 mPosition = position;
             }
@@ -103,6 +112,7 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
+
         return rootView;
     }
 
@@ -134,7 +144,8 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Uri matchUri = MatchContract.MatchEntry.CONTENT_URI;
-        return new CursorLoader(getActivity(),
+        return new CursorLoader(
+                getActivity(),
                 matchUri,
                 MATCH_COLUMNS,
                 null,
@@ -145,16 +156,20 @@ public class MatchFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         matchs.swapCursor(cursor);
+
         if (cursor != null && cursor.moveToFirst()) {
-            jornadaTextView.setText("JORNADA " + cursor.getString(COL_MATCH_ROUND));
+            jornadaTextView.setText("JORNADA  " + cursor.getString(COL_MATCH_ROUND));
         }
+
         if (mPosition != ListView.INVALID_POSITION) {
-            listView.smoothScrollToPosition(mPosition);
+            listViewMatch.smoothScrollToPosition(mPosition);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
+
         matchs.swapCursor(null);
     }
+
 }

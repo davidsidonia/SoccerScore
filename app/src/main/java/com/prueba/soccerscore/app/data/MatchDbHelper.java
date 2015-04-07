@@ -11,7 +11,7 @@ import com.prueba.soccerscore.app.data.MatchContract.ScoreEntry;
  */
 public class MatchDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     static final String DATABASE_NAME = "soccerscore.db";
 
     public MatchDbHelper(Context context) {
